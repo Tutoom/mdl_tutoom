@@ -1,0 +1,17 @@
+#tutoom_view_recordings_header > h6 {
+  font-size: 20px;
+}
+
+#tutoom-start-button:hover > .spinner-border,
+#tutoom-join-button:hover > .spinner-border,
+#tutoom-end-button:hover > .spinner-border {
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+#tutoom-start-button,
+#tutoom-join-button,
+#tutoom-end-button {
+  outline: none !important;
+  box-shadow: none !important;
+}
