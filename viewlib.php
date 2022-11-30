@@ -58,6 +58,7 @@ function tutoom_view_render($id, $moduleinstance, $ismoderator) {
         "role" => $ismoderator,
         "recordings" => $recordings,
         "id" => $id,
+        "requesturi" => $_SERVER["REQUEST_URI"]
     );
 
     if (isset($meetingid)) {

@@ -40,6 +40,6 @@
 {{#js}}
     require(['mod_tutoom/activity'], function(module) {
         const role = Boolean(parseInt({{#quote}}{{role}}{{/quote}}));
-        module.init({{#quote}}{{id}}{{/quote}},role);
+        module.init({{#quote}}{{id}}{{/quote}},role,{{#quote}}{{requesturi}}{{/quote}});
     });
 {{/js}}
