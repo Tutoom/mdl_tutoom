@@ -4,9 +4,7 @@ import { exception as displayException } from "core/notification";
 
 M.mod_tutoom = M.mod_tutoom || {};
 
-export const init = (ID, isModerator, requestUri) => {
-  const baseUrl = `${requestUri.split("view.php")[0]}tutoom_ajax.php`;
-
+export const init = (ID, isModerator, baseUrl) => {
   const contentContainer = document.getElementById("tutoom-content-box");
   const spinnerHTML =
     "<div class='spinner-border spinner-border-sm text-dark'></div>";
