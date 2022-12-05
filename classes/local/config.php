@@ -19,7 +19,7 @@ namespace mod_tutoom\local;
 /**
  * Handles the global configuration based on config.php.
  *
- * @package   mod_bigbluebuttonbn
+ * @package   mod_tutoom
  * @copyright 2022 onwards, Tutoom Inc
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
