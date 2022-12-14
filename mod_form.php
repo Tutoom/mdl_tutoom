@@ -83,7 +83,7 @@ class mod_tutoom_mod_form extends moodleform_mod {
         if ($CFG->branch >= 29) {
             $this->standard_intro_elements();
         } else {
-            $this->add_intro_editor();
+            moodleform_mod::standard_intro_elements();
         }
 
         // Adding the rest of mod_tutoom settings, spreading all them into this fieldset
