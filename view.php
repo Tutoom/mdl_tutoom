@@ -43,7 +43,7 @@ if ($id) {
     $course = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('tutoom', $moduleinstance->id, $course->id, false, MUST_EXIST);
 } else {
-    moodle_exception(get_string('missingidandcmid', 'mod_tutoom'));
+    throw new moodle_exception('missingidandcmid', 'mod_tutoom');
 }
 require_login($course, true, $cm);
 
