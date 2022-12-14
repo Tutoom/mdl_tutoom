@@ -43,7 +43,6 @@ $string['config_general_description'] = 'Estas configuraciones seran usadas <b>s
 
 // Initial form.
 $string['tutoomname'] = 'Nombre';
-$string['mod_form_field_record'] = 'Recordar la sesión';
 $string['mod_form_block_room'] = 'Configuración de Actividades/Salones';
 $string['mod_form_field_welcome'] = 'Mensaje de Bienvenida';
 $string['mod_form_field_welcome_default_message'] = 'Bienvenido a la clase. Sientete libre de hacer cualquier pregunta.';

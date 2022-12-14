@@ -97,8 +97,6 @@ class mod_tutoom_mod_form extends moodleform_mod {
         );
         $mform->setDefault('welcomemessage', get_string('mod_form_field_welcome_default_message', 'mod_tutoom'));
 
-        $mform->addElement('checkbox', 'record', get_string('mod_form_field_record', 'mod_tutoom'));
-
         // Add standard elements.
         $this->standard_coursemodule_elements();
 

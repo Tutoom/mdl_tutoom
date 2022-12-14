@@ -43,7 +43,6 @@ $string['config_general_description'] = 'These settings are <b>always</b> used';
 
 // Initial form.
 $string['tutoomname'] = 'Name';
-$string['mod_form_field_record'] = 'Session can be recorded';
 $string['mod_form_block_room'] = 'Activity/Room settings';
 $string['mod_form_field_welcome'] = 'Welcome message';
 $string['mod_form_field_welcome_default_message'] = 'Welcome to the class. Feel free to ask any question.';
