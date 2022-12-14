@@ -32,7 +32,7 @@
     {{#meetingid}}
         <div class="d-flex align-items-center">
             <img src='pix/icon-color_picker.svg'>
-            <span class="ml-3">ONLINE</span>
+            <span class="ml-3">{{#str}} view_message_session_status_on, mod_tutoom {{/str}}</span>
         </div>
         <div class="d-flex align-items-center">
             <img src='pix/icon-clock.svg'>
@@ -63,7 +63,7 @@
         {{#role}}
             <div class="d-flex align-items-center">
                 <img src='pix/icon-color_picker-outline.svg'>
-                <span class="ml-3">OFFLINE</span>
+                <span class="ml-3">{{#str}} view_message_session_status_off, mod_tutoom {{/str}}</span>
             </div>
         {{/role}}
         {{^role}}
