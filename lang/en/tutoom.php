@@ -34,6 +34,10 @@ $string['modulename_help'] = 'Tutoom lets you create from within Moodle links to
 $string['message_account_id_not_set'] = 'You need to set your organization Tutoom account id in the general plugin settings section.';
 $string['missingidandcmid'] = 'Tutoom ID is incorrect. Please, go to your course and select your activity to correctly enter Tutoom.';
 
+// Capabilities.
+$string['tutoom:joinasmoderator'] = 'Join as moderator a Tutoom meeting';
+$string['tutoom:addinstance'] = 'Add a new Tutoom room/activity';
+
 // Initial config.
 $string['config_account_id'] = 'Tutoom account ID';
 $string['config_account_id_description'] = 'The ID of your organization Tutoom account.';
