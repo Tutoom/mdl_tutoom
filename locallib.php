@@ -36,7 +36,7 @@ require_once(__DIR__ . '/lib.php');
  *
  * @return string
  */
-function tutoom_random_password($length = 8, $unique = "") {
+function tutoom_random_string($length = 8, $unique = "") {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
     do {
@@ -54,7 +54,7 @@ function tutoom_random_password($length = 8, $unique = "") {
 function tutoom_unique_classid_seed() {
     global $DB;
     do {
-        $encodedseed = sha1(tutoom_random_password(12));
+        $encodedseed = sha1(tutoom_random_string(12));
         $classid = (string)$DB->get_field('tutoom', 'classid', array('classid' => $encodedseed));
     } while ($classid == $encodedseed);
     return $encodedseed;
