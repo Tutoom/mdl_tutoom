@@ -1,0 +1,9 @@
+.vscode
+vendor/
+node_modules/
+*.log
+
+tutoom/
+*.zip
+
+/local/codechecker/
