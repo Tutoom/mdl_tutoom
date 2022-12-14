@@ -25,16 +25,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
-    'mod/tutoom:addinstance' => array(
-        'riskbitmask' => RISK_XSS,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-        ),
-        'clonepermissionsfrom' => 'moodle/course:manageactivities',
-    ),
     'mod/tutoom:joinasmoderator' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
