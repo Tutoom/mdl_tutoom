@@ -2,6 +2,24 @@
 
 Tutoom is a digital classroom with all tools you need: whiteboard tools, polls, notepad, library, chat, breakout rooms, videoconference.
 
+# How to work
+
+1. Install Tutoom plugin in Moodle environment
+2. Setup plugin credentials
+3. Create course
+4. Add Tutoom activity inside course
+5. Join in the session 
+
+For more information check our documentation [Setup & Plugins](https://help.tutoom.com/hc/en-us/sections/8524315989780-Moodle-Plugin)
+
+# Prerequisites
+
+You need create admin account in [tutoom.com](https://tutoom.com) to get API Key & secret credentials.
+
+# Suscription pricing
+
+Our suscripcion plans are described in the official website [Tutoom Pricing](https://www.tutoom.com/pricing)
+
 # Compatibility
 
 We have compatibility with this moodle versions:
