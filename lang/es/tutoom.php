@@ -30,8 +30,11 @@ $string['pluginname'] = 'Tutoom';
 $string['pluginadministration'] = '';
 $string['modulenameplural'] = 'Tutoom';
 $string['modulename_help'] = 'Tutoom le permite crear desde dentro de Moodle enlaces a reuniones en línea en tiempo real usando Tutoom, un sistema de conferencias web para educación a distancia.';
+
 $string['message_account_id_not_set'] = 'Necesitas configurar el id de la cuenta Tutoom de tu organización en la sección de configuraciones generales del plugin.';
 $string['missingidandcmid'] = 'El ID de Tutoom es incorrecto. Por favor, dirígase a su curso y seleccione su actividad para entrar correctamente a Tutoom.';
+
+$string['index_error_noinstances'] = 'No hay instancias de Tutoom';
 
 // Capabilities.
 $string['tutoom:joinasmoderator'] = 'Únase como moderador a una reunión de Tutoom';
