@@ -85,4 +85,8 @@ $string['message_loading'] = 'Please wait...';
 $string['pagination_previous'] = 'Previous';
 $string['pagination_next'] = 'Next';
 
-$string['privacy:metadata'] = 'Tutoom do not store any personal data.';
+$string['privacy:metadata:tutoom'] = 'In order to create and join Tutoom sessions, user data needs to be exchanged with the server.';
+$string['privacy:metadata:tutoom:email'] = 'The email of the user accessing to Moodle.';
+$string['privacy:metadata:tutoom:fullname'] = 'The fullname of the user accessing to Moodle.';
+$string['privacy:metadata:tutoom:coursename'] = 'The course name of the user';
+$string['privacy:metadata:tutoom:role'] = 'The role of the user accessing to Moodle.';
