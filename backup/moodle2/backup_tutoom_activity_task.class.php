@@ -67,11 +67,11 @@ class backup_tutoom_activity_task extends backup_activity_task {
 
         // Link to the list of tutooms.
         $pattern = '#('.$base."\/index.php\?id\=)([0-9]+)#";
-        $content = preg_replace($pattern, '$@tutoomINDEX*$2@$', $content);
+        $content = preg_replace($pattern, '$@TUTOOMINDEX*$2@$', $content);
 
         // Link to tutoom view by moduleid.
         $pattern = '#('.$base."\/view.php\?id\=)([0-9]+)#";
-        $content = preg_replace($pattern, '$@tutoomVIEWBYID*$2@$', $content);
+        $content = preg_replace($pattern, '$@TUTOOMVIEWBYID*$2@$', $content);
 
         return $content;
     }
