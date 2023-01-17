@@ -25,7 +25,7 @@ namespace mod_tutoom\local;
  */
 class config {
     /** @var string Default tutoom api url */
-    public const API_URL = 'https://api.tutoom.com/v1/';
+    public const API_URL = 'https://tutoom-backend-api-rhdzxbtv4q-ue.a.run.app/v1/';
 
     /** @var string Defines name of moderator role */
     public const MODERATOR_ROLE = 'MODERATOR';
@@ -41,6 +41,7 @@ class config {
     public static function defaultvalues() {
         return array(
             'account_id' => '',
+            'account_secret' => '',
             'api_url' => self::API_URL,
             'moderator_role' => self::MODERATOR_ROLE,
             'viewer_role' => self::VIEWER_ROLE,
@@ -86,6 +87,7 @@ class config {
     public static function get_options() {
         return array(
             'account_id' => self::get("account_id"),
+            'account_secret' => self::get("account_secret"),
             'api_url' => self::get("api_url"),
             'moderator_role' => self::get("moderator_role"),
             'viewer_role' => self::get("viewer_role"),

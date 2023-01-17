@@ -41,13 +41,11 @@ class recording {
      * @return stdClass
      */
     public static function get_recordings(string $classid, int $page = 1): stdClass {
-        global $CFG;
-
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
+        $accountid = $cfg["account_id"];
+        $accountsecret = $cfg["account_secret"];
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
         $results = new stdClass();
 
         $requesttimestamp = time();

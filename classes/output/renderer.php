@@ -152,29 +152,4 @@ class renderer extends plugin_renderer_base {
         );
         return $item;
     }
-
-    /**
-     * Render a general warning message.
-     *
-     * @param string    $name
-     * @param string    $message
-     * @param string    $type
-     * @param boolean   $closable
-     *
-     * @return Object
-     */
-    public function render_warning_message($name, $message, $type = 'warning', $closable = true) {
-        $output = $this->output->box_start(
-            'box boxalignleft adminerror alert alert-' . $type . ' alert-block fade in',
-            'tutoom_' . $name
-        ) . "\n";
-        if ($closable) {
-            $output .= '  <button type="button" class="close" data-dismiss="alert">&times;</button>' . "\n";
-        }
-        $output .= '  ' . $message . "\n";
-        $output .= $this->output->box_end() . "\n";
-        $item = new \admin_setting_heading('tutoom_' . $name, '', $output);
-        $this->settings->add($item);
-        return $item;
-    }
 }

@@ -41,13 +41,13 @@ class meeting {
      * @return stdClass
      */
     public static function get_meeting_info(string $meetingid, string $recordid): stdClass {
-        global $CFG, $DB;
+        global $DB;
 
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
+        $accountid = $cfg["account_id"];
+        $accountsecret = $cfg["account_secret"];
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
         $results = new stdClass();
 
         $requesttimestamp = time();
@@ -90,10 +90,11 @@ class meeting {
      * @return string
      */
     public static function join_meeting(string $meetingid, string $fullname, string $role, string $appurl): string {
-        global $CFG, $USER;
+        global $USER;
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
+        $cfg = config::get_options();
+        $accountid = $cfg["account_id"];
+        $accountsecret = $cfg["account_secret"];
 
         $requesttimestamp = time();
         $checksumrequest = json_decode("{
@@ -131,13 +132,13 @@ class meeting {
         string $welcomemessage,
         string $recordid
     ): stdClass {
-        global $CFG, $DB;
+        global $DB;
 
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
+        $accountid = $cfg["account_id"];
+        $accountsecret = $cfg["account_secret"];
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
         $results = new stdClass();
 
         $requesttimestamp = time();
@@ -195,13 +196,13 @@ class meeting {
      * @return stdClass
      */
     public static function end_meeting(string $incomingmeetingid, string $recordid): stdClass {
-        global $CFG, $DB;
+        global $DB;
 
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
+        $accountid = $cfg["account_id"];
+        $accountsecret = $cfg["account_secret"];
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
         $results = new stdClass();
 
         $requesttimestamp = time();
