@@ -31,7 +31,7 @@ require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/classes/meeting.php');
 require_once(__DIR__ . '/classes/recording.php');
 
-global $PAGE, $USER, $CFG, $SESSION, $DB;
+global $PAGE, $USER, $SESSION, $DB;
 
 $params['action'] = optional_param('action', '', PARAM_TEXT);
 $params['callback'] = optional_param('callback', '', PARAM_TEXT);
@@ -50,9 +50,6 @@ if (!$params['mobil']) {
     require_login(null, true);
     require_sesskey();
 }
-
-$accountid = $CFG->tutoom_account_id;
-$accountsecret = $CFG->tutoom_account_secret;
 
 if (empty($params['action'])) {
     header('HTTP/1.0 400 Bad Request. Parameter [' . $params['action'] . '] was not included');

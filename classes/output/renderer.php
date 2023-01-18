@@ -61,21 +61,6 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
-     * Render an element in a group.
-     *
-     * @param string $name
-     * @param object $item
-     *
-     * @return void
-     */
-    public function render_group_element($name, $item) {
-        global $CFG;
-        if (!isset($CFG->tutoom[$name])) {
-            $this->settings->add($item);
-        }
-    }
-
-    /**
      * Render a text element in a group.
      *
      * @param string    $name
@@ -86,13 +71,13 @@ class renderer extends plugin_renderer_base {
      */
     public function render_group_element_text($name, $default = null, $type = PARAM_RAW) {
         $item = new \admin_setting_configtext(
-            'tutoom_' . $name,
+            'mod_tutoom/' . $name,
             get_string('config_' . $name, 'tutoom'),
             get_string('config_' . $name . '_description', 'tutoom'),
             $default,
             $type
         );
-        return $item;
+        $this->settings->add($item);
     }
 
     /**
@@ -105,12 +90,12 @@ class renderer extends plugin_renderer_base {
      */
     public function render_group_element_checkbox($name, $default = null) {
         $item = new \admin_setting_configcheckbox(
-            'tutoom_' . $name,
+            'mod_tutoom/' . $name,
             get_string('config_' . $name, 'tutoom'),
             get_string('config_' . $name . '_description', 'tutoom'),
             $default
         );
-        return $item;
+        $this->settings->add($item);
     }
 
     /**
@@ -124,13 +109,13 @@ class renderer extends plugin_renderer_base {
      */
     public function render_group_element_configmultiselect($name, $defaultsetting, $choices) {
         $item = new \admin_setting_configmultiselect(
-            'tutoom_' . $name,
+            'mod_tutoom/' . $name,
             get_string('config_' . $name, 'tutoom'),
             get_string('config_' . $name . '_description', 'tutoom'),
             $defaultsetting,
             $choices
         );
-        return $item;
+        $this->settings->add($item);
     }
 
     /**
@@ -144,37 +129,12 @@ class renderer extends plugin_renderer_base {
      */
     public function render_group_element_configselect($name, $defaultsetting, $choices) {
         $item = new \admin_setting_configselect(
-            'tutoom_' . $name,
+            'mod_tutoom/' . $name,
             get_string('config_' . $name, 'tutoom'),
             get_string('config_' . $name . '_description', 'tutoom'),
             $defaultsetting,
             $choices
         );
-        return $item;
-    }
-
-    /**
-     * Render a general warning message.
-     *
-     * @param string    $name
-     * @param string    $message
-     * @param string    $type
-     * @param boolean   $closable
-     *
-     * @return Object
-     */
-    public function render_warning_message($name, $message, $type = 'warning', $closable = true) {
-        $output = $this->output->box_start(
-            'box boxalignleft adminerror alert alert-' . $type . ' alert-block fade in',
-            'tutoom_' . $name
-        ) . "\n";
-        if ($closable) {
-            $output .= '  <button type="button" class="close" data-dismiss="alert">&times;</button>' . "\n";
-        }
-        $output .= '  ' . $message . "\n";
-        $output .= $this->output->box_end() . "\n";
-        $item = new \admin_setting_heading('tutoom_' . $name, '', $output);
         $this->settings->add($item);
-        return $item;
     }
 }
