@@ -40,8 +40,6 @@ class config {
      */
     public static function defaultvalues() {
         return array(
-            'account_id' => '',
-            'account_secret' => '',
             'api_url' => self::API_URL,
             'moderator_role' => self::MODERATOR_ROLE,
             'viewer_role' => self::VIEWER_ROLE,
@@ -69,13 +67,6 @@ class config {
      * @return string
      */
     public static function get($setting) {
-        global $CFG;
-        if (isset($CFG->tutoom[$setting])) {
-            return (string)$CFG->tutoom[$setting];
-        }
-        if (isset($CFG->{'tutoom_' . $setting})) {
-            return (string)$CFG->{'tutoom_' . $setting};
-        }
         return self::defaultvalue($setting);
     }
 
@@ -86,8 +77,6 @@ class config {
      */
     public static function get_options() {
         return array(
-            'account_id' => self::get("account_id"),
-            'account_secret' => self::get("account_secret"),
             'api_url' => self::get("api_url"),
             'moderator_role' => self::get("moderator_role"),
             'viewer_role' => self::get("viewer_role"),

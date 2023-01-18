@@ -45,8 +45,10 @@ class meeting {
 
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
-        $accountid = $cfg["account_id"];
-        $accountsecret = $cfg["account_secret"];
+
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
 
         $results = new stdClass();
 
@@ -92,9 +94,9 @@ class meeting {
     public static function join_meeting(string $meetingid, string $fullname, string $role, string $appurl): string {
         global $USER;
 
-        $cfg = config::get_options();
-        $accountid = $cfg["account_id"];
-        $accountsecret = $cfg["account_secret"];
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
 
         $requesttimestamp = time();
         $checksumrequest = json_decode("{
@@ -136,8 +138,10 @@ class meeting {
 
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
-        $accountid = $cfg["account_id"];
-        $accountsecret = $cfg["account_secret"];
+
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
 
         $results = new stdClass();
 
@@ -200,8 +204,10 @@ class meeting {
 
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
-        $accountid = $cfg["account_id"];
-        $accountsecret = $cfg["account_secret"];
+
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
 
         $results = new stdClass();
 

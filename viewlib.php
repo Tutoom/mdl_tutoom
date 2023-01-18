@@ -39,8 +39,8 @@ require_once(__DIR__ . '/classes/meeting.php');
 function tutoom_view_render($id, $moduleinstance, $ismoderator) {
     global $OUTPUT, $CFG;
 
-    $cfg = config::get_options();
-    $accountid = $cfg["account_id"];
+    $config = get_config("mod_tutoom");
+    $accountid = $config->account_id;
 
     if (!isset($accountid) || $accountid == '') {
         $message = get_string('message_account_id_not_set', 'mod_tutoom');

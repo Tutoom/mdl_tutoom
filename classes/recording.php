@@ -43,8 +43,10 @@ class recording {
     public static function get_recordings(string $classid, int $page = 1): stdClass {
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
-        $accountid = $cfg["account_id"];
-        $accountsecret = $cfg["account_secret"];
+
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
 
         $results = new stdClass();
 
