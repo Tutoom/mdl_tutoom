@@ -85,6 +85,9 @@ $string['message_loading'] = 'Please wait...';
 $string['pagination_previous'] = 'Previous';
 $string['pagination_next'] = 'Next';
 
+// Errors.
+$string['view_page_error_general'] = 'There are no rooms available. Please contact your administrator for more information.';
+
 $string['privacy:metadata:tutoom'] = 'In order to create and join Tutoom sessions, user data needs to be exchanged with the server.';
 $string['privacy:metadata:tutoom:email'] = 'The email of the user accessing to Moodle.';
 $string['privacy:metadata:tutoom:fullname'] = 'The fullname of the user accessing to Moodle.';

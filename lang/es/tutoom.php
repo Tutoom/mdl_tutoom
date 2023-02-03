@@ -85,6 +85,9 @@ $string['message_loading'] = 'Porfavor espere...';
 $string['pagination_previous'] = 'Anterior';
 $string['pagination_next'] = 'Siguiente';
 
+// Errors.
+$string['view_page_error_general'] = 'No hay salas disponibles. Por favor contacte a su administrador para mayor información.';
+
 $string['privacy:metadata:tutoom'] = 'Para crear y unirse a sesiones de Tutoom, los datos de usuario deben intercambiarse con el servidor.';
 $string['privacy:metadata:tutoom:email'] = 'El correo electrónico del usuario que accede a Moodle.';
 $string['privacy:metadata:tutoom:fullname'] = 'El nombre completo del usuario que accede a Moodle.';

@@ -29,21 +29,26 @@
     }
 }}
 
-<h3 class="mb-0">{{name}}</h3>
+{{#errorcode}}
+    <p class="mb-0">Error {{errorcode}}. {{#str}} view_page_error_general, mod_tutoom {{/str}}</p>
+{{/errorcode}}
+{{^errorcode}}
+    <h3 class="mb-0">{{name}}</h3>
 
-<div id='tutoom-content-box'>
-    {{>mod_tutoom/main_section}}
-</div>
+    <div id='tutoom-content-box'>
+        {{>mod_tutoom/main_section}}
+    </div>
 
-{{!
-    Recordings coming soon
+    {{!
+        Recordings coming soon
 
-    >mod_tutoom/recordings_section
-}}
+        >mod_tutoom/recordings_section
+    }}
 
-{{#js}}
-    require(['mod_tutoom/activity'], function(module) {
-        const role = Boolean(parseInt({{#quote}}{{role}}{{/quote}}));
-        module.init({{#quote}}{{id}}{{/quote}},role,{{#quote}}{{baseurl}}{{/quote}});
-    });
-{{/js}}
+    {{#js}}
+        require(['mod_tutoom/activity'], function(module) {
+            const role = Boolean(parseInt({{#quote}}{{role}}{{/quote}}));
+            module.init({{#quote}}{{id}}{{/quote}},role,{{#quote}}{{baseurl}}{{/quote}});
+        });
+    {{/js}}
+{{/errorcode}}
