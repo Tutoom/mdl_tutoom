@@ -43,11 +43,7 @@ function tutoom_view_render($id, $moduleinstance, $ismoderator) {
     $accountid = $config->account_id;
 
     if (!isset($accountid) || $accountid == '') {
-        $message = get_string('message_account_id_not_set', 'mod_tutoom');
-        $output = "<p>$message</p>";
-
-        echo $output;
-
+        echo $OUTPUT->render_from_template("mod_tutoom/view_page", array('errorcode' => 500));
         return;
     }
 
@@ -65,6 +61,12 @@ function tutoom_view_render($id, $moduleinstance, $ismoderator) {
 
     if (isset($meetingid)) {
         $meeetinginfo = meeting::get_meeting_info($meetingid, $moduleinstance->id);
+
+        if(isset($meeetinginfo->error)){
+            $errorcode = $meeetinginfo->error->errorCode;
+            echo $OUTPUT->render_from_template("mod_tutoom/view_page", array('errorcode' => $errorcode));
+            return;
+        }
 
         $participantcount = $meeetinginfo->participantsCount;
         $seconds = $meeetinginfo->creationTimestamp->{"_seconds"};

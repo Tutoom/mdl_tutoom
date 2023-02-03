@@ -72,12 +72,18 @@ class meeting {
             'CURLOPT_HTTPHEADER' => array('Content-Type: application/json')
         ));
         $response = $curl->get($url);
+        $info = $curl->get_info();
 
-        $results = json_decode($response);
-        $results->meetingId = $meetingid;
+        if ($info['http_code'] >= 300){
+            $results->error = json_decode($response);
+        }
+        else {
+            $results = json_decode($response);
+            $results->meetingId = $meetingid;
 
-        if (isset($results->isFinished) && $results->isFinished) {
-            $DB->set_field('tutoom', 'meetingid', null, array('id' => $recordid));
+            if (isset($results->isFinished) && $results->isFinished) {
+                $DB->set_field('tutoom', 'meetingid', null, array('id' => $recordid));
+            }
         }
 
         return $results;
