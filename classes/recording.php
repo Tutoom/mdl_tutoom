@@ -18,7 +18,9 @@ namespace mod_tutoom;
 
 defined('MOODLE_INTERNAL') || die;
 require_once(__DIR__ . '../../locallib.php');
+require_once($CFG->libdir . '/filelib.php');
 
+use curl;
 use stdClass;
 use mod_tutoom\local\config;
 
@@ -41,13 +43,13 @@ class recording {
      * @return stdClass
      */
     public static function get_recordings(string $classid, int $page = 1): stdClass {
-        global $CFG;
-
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
+
         $results = new stdClass();
 
         $requesttimestamp = time();
@@ -64,23 +66,21 @@ class recording {
         $paramstourl = http_build_query($params, '&amp;', '&');
 
         $url = $apiurl . "recordings" . "?" . $paramstourl;
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
-        curl_setopt($curl, CURLOPT_FAILONERROR, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-        $response = curl_exec($curl);
 
-        if (curl_errno($curl)) {
-            $error = curl_error($curl);
-        }
+        $curl = new curl();
+        $curl->setopt(array(
+            'CURLOPT_FAILONERROR' => true,
+            'CURLOPT_RETURNTRANSFER' => true,
+            'CURLOPT_HTTPHEADER' => array('Content-Type: application/json')
+        ));
+        $response = $curl->get($url);
+        $info = $curl->get_info();
 
-        if (isset($error)) {
-            $results->error = $error;
+        if ($curl->error || $info['http_code'] >= 300){
+            $results->error = strlen($curl->error) > 0 ? $curl->error : $response;
         } else {
-            $results = json_decode($response);
+            $results->data = json_decode($response);
         }
-        curl_close($curl);
 
         return $results;
     }

@@ -18,7 +18,9 @@ namespace mod_tutoom;
 
 defined('MOODLE_INTERNAL') || die;
 require_once(__DIR__ . '../../locallib.php');
+require_once($CFG->libdir . '/filelib.php');
 
+use curl;
 use stdClass;
 use mod_tutoom\local\config;
 
@@ -41,13 +43,15 @@ class meeting {
      * @return stdClass
      */
     public static function get_meeting_info(string $meetingid, string $recordid): stdClass {
-        global $CFG, $DB;
+        global $DB;
 
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
+
         $results = new stdClass();
 
         $requesttimestamp = time();
@@ -62,20 +66,19 @@ class meeting {
 
         $url = $apiurl . "meetings/$meetingid" . "?" . $paramstourl;
 
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-        $response = curl_exec($curl);
+        $curl = new curl();
+        $curl->setopt(array(
+            'CURLOPT_RETURNTRANSFER' => true,
+            'CURLOPT_HTTPHEADER' => array('Content-Type: application/json')
+        ));
+        $response = $curl->get($url);
 
-        $jsonresponse = json_decode($response);
-        if (isset($jsonresponse->isFinished) && $jsonresponse->isFinished) {
-            $DB->set_field('tutoom', 'meetingid', null, array('id' => $recordid));
-        }
-
-        $results = $jsonresponse;
+        $results = json_decode($response);
         $results->meetingId = $meetingid;
 
-        curl_close($curl);
+        if (isset($results->isFinished) && $results->isFinished) {
+            $DB->set_field('tutoom', 'meetingid', null, array('id' => $recordid));
+        }
 
         return $results;
     }
@@ -90,10 +93,11 @@ class meeting {
      * @return string
      */
     public static function join_meeting(string $meetingid, string $fullname, string $role, string $appurl): string {
-        global $CFG, $USER;
+        global $USER;
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
 
         $requesttimestamp = time();
         $checksumrequest = json_decode("{
@@ -131,13 +135,15 @@ class meeting {
         string $welcomemessage,
         string $recordid
     ): stdClass {
-        global $CFG, $DB;
+        global $DB;
 
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
+
         $results = new stdClass();
 
         $requesttimestamp = time();
@@ -155,20 +161,18 @@ class meeting {
         $params = tuttom_generate_checksum('post', 'meetings', $checksumrequest, $accountsecret);
 
         $url = $apiurl . "meetings";
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($curl, CURLOPT_FAILONERROR, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($params));
-        $response = curl_exec($curl);
 
-        if (curl_errno($curl)) {
-            $error = curl_error($curl);
-        }
+        $curl = new curl();
+        $curl->setopt(array(
+            'CURLOPT_FAILONERROR' => true,
+            'CURLOPT_RETURNTRANSFER' => true,
+            'CURLOPT_HTTPHEADER' => array('Content-Type: application/json'))
+        );
+        $response = $curl->post($url, json_encode($params));
+        $info = $curl->get_info();
 
-        if (isset($error)) {
-            $results->error = $error;
+        if ($curl->error || $info['http_code'] >= 300){
+            $results->error = strlen($curl->error) > 0 ? $curl->error : $response;
         } else {
             $jsonresponse = json_decode($response);
 
@@ -182,8 +186,6 @@ class meeting {
             $results->id = $meetingid;
         }
 
-        curl_close($curl);
-
         return $results;
     }
 
@@ -195,13 +197,15 @@ class meeting {
      * @return stdClass
      */
     public static function end_meeting(string $incomingmeetingid, string $recordid): stdClass {
-        global $CFG, $DB;
+        global $DB;
 
         $cfg = config::get_options();
         $apiurl = $cfg["api_url"];
 
-        $accountid = $CFG->tutoom_account_id;
-        $accountsecret = $CFG->tutoom_account_secret;
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
+
         $results = new stdClass();
 
         $requesttimestamp = time();
@@ -217,25 +221,22 @@ class meeting {
 
         $url = $apiurl . "meetings/$incomingmeetingid" . "?" . $queryparams;
 
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-        curl_setopt($curl, CURLOPT_FAILONERROR, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-        curl_exec($curl);
+        $curl = new curl();
+        $curl->setopt(array(
+            'CURLOPT_FAILONERROR' => true,
+            'CURLOPT_RETURNTRANSFER' => true,
+            'CURLOPT_HTTPHEADER' => array('Content-Type: application/json'))
+        );
+        $response = $curl->delete($url);
+        $info = $curl->get_info();
 
-        if (curl_errno($curl)) {
-            $error = curl_error($curl);
-        }
-
-        if (isset($error)) {
-            $results->error = $error;
+        if ($curl->error || $info['http_code'] >= 300){
+            $results->error = strlen($curl->error) > 0 ? $curl->error : $response;
         } else {
             $DB->set_field('tutoom', 'meetingid', null, array('id' => $recordid));
             $DB->set_field('tutoom', 'urlapp', null, array('id' => $recordid));
             $results->deleted = true;
         }
-        curl_close($curl);
 
         return $results;
     }

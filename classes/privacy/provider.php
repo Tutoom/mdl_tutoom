@@ -14,19 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Privacy class for requesting user data.
+ *
+ * @package   mod_tutoom
+ * @copyright 2022 onwards, Tutoom Inc.
+ * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace mod_tutoom\privacy;
 
+use \core_privacy\local\metadata\collection;
+
 class provider implements
-    // This plugin does not store any personal user data.
-    \core_privacy\local\metadata\null_provider {
+    // This plugin has data.
+    \core_privacy\local\metadata\provider {
 
     /**
-     * Get the language string identifier with the component's language
-     * file to explain why this plugin stores no data.
+     * Returns metadata.
      *
-     * @return  string
+     * @param collection $collection The initialised collection to add items to.
+     * @return collection A listing of user data stored through this system.
      */
-    public static function get_reason(): string {
-        return 'privacy:metadata';
+    public static function get_metadata(collection $collection): collection {
+        // Personal information has to be passed to Tutoom.
+        // This includes the user email, fullname, role and course name.
+        $collection->add_external_location_link('tutoom', [
+                'email' => 'privacy:metadata:tutoom:email',
+                'fullname' => 'privacy:metadata:tutoom:fullname',
+                'coursename' => 'privacy:metadata:tutoom:coursename',
+                'role' => 'privacy:metadata:tutoom:role',
+            ], 'privacy:metadata:tutoom');
+
+        return $collection;
     }
 }

@@ -68,12 +68,9 @@ function tutoom_unique_classid_seed() {
  * @return void
  */
 function tutoom_settings_general(&$renderer) {
-    global $CFG;
-    if (!isset($CFG->tutoom['account_id'])) {
-        $renderer->render_group_header('general');
-        $renderer->render_group_element('account_id', $renderer->render_group_element_text('account_id', ''));
-        $renderer->render_group_element('account_secret', $renderer->render_group_element_text('account_secret', ''));
-    }
+    $renderer->render_group_header('general');
+    $renderer->render_group_element_text('account_id', '');
+    $renderer->render_group_element_text('account_secret', '');
 }
 
 /**
