@@ -42,14 +42,8 @@ $params['logoutUrl'] = optional_param('logoutUrl', '', PARAM_TEXT);
 $params['signed_parameters'] = optional_param('signed_parameters', '', PARAM_TEXT);
 $params['updatecache'] = optional_param('updatecache', 'false', PARAM_TEXT);
 $params['meta'] = optional_param('meta', '', PARAM_TEXT);
-$params['mobil'] = optional_param('mobil', 0, PARAM_INT);
 $params['fullname'] = optional_param('fullname', '', PARAM_TEXT);
 $params['page'] = optional_param('page', 0, PARAM_INT);
-
-if (!$params['mobil']) {
-    require_login(null, true);
-    require_sesskey();
-}
 
 if (empty($params['action'])) {
     header('HTTP/1.0 400 Bad Request. Parameter [' . $params['action'] . '] was not included');
@@ -66,6 +60,9 @@ try {
     $cm = get_coursemodule_from_id('tutoom', $id, 0, false, MUST_EXIST);
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
+    require_login($course, true, $cm);
+    require_sesskey();
+
     $moduleinstance = $DB->get_record('tutoom', array('id' => $cm->instance), '*', MUST_EXIST);
 
     $modulecontext = context_module::instance($cm->id);
@@ -75,7 +72,7 @@ try {
     $viewer = $cfg["viewer_role"];
     $role = has_capability('mod/tutoom:joinasmoderator', $modulecontext) ? $moderator : $viewer;
 
-    $fullname = $params['mobil'] ? $params['fullname'] : "$USER->firstname $USER->lastname";
+    $fullname = "$USER->firstname $USER->lastname";
 
     $meetingid = $moduleinstance->meetingid;
     $classid = $moduleinstance->classid;
