@@ -25,7 +25,7 @@ namespace mod_tutoom\local;
  */
 class config {
     /** @var string Default tutoom api url */
-    public const API_URL = 'https://tutoom-backend-api-rhdzxbtv4q-ue.a.run.app/v1/';
+    public const API_URL = 'https://api.tutoom.com/v1/';
 
     /** @var string Defines name of moderator role */
     public const MODERATOR_ROLE = 'MODERATOR';
