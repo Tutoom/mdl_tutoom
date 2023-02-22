@@ -29,12 +29,12 @@
     }
 }}
 
+<h3 class="mb-0">{{name}}</h3>
+
 {{#errorcode}}
-    <p class="mb-0">Error {{errorcode}}. {{#str}} view_page_error_general, mod_tutoom {{/str}}</p>
+    <p class="mb-0 mt-3">Error {{errorcode}}. {{#str}} view_page_error_general, mod_tutoom {{/str}}</p>
 {{/errorcode}}
 {{^errorcode}}
-    <h3 class="mb-0">{{name}}</h3>
-
     <div id='tutoom-content-box'>
         {{>mod_tutoom/main_section}}
     </div>

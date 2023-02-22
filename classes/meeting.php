@@ -170,15 +170,14 @@ class meeting {
 
         $curl = new curl();
         $curl->setopt(array(
-            'CURLOPT_FAILONERROR' => true,
             'CURLOPT_RETURNTRANSFER' => true,
             'CURLOPT_HTTPHEADER' => array('Content-Type: application/json'))
         );
         $response = $curl->post($url, json_encode($params));
         $info = $curl->get_info();
 
-        if ($curl->error || $info['http_code'] >= 300){
-            $results->error = strlen($curl->error) > 0 ? $curl->error : $response;
+        if ($info['http_code'] >= 300){
+            $results->error = json_decode($response);
         } else {
             $jsonresponse = json_decode($response);
 
@@ -229,7 +228,6 @@ class meeting {
 
         $curl = new curl();
         $curl->setopt(array(
-            'CURLOPT_FAILONERROR' => true,
             'CURLOPT_RETURNTRANSFER' => true,
             'CURLOPT_HTTPHEADER' => array('Content-Type: application/json'))
         );
