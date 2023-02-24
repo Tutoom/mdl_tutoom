@@ -22,6 +22,14 @@ export const init = (ID, isModerator, baseUrl) => {
     return await window.fetch(url);
   };
 
+  const render = (location, data) => {
+    Templates.renderForPromise(location, data)
+      .then(({ html, js }) => {
+        Templates.replaceNodeContents(contentContainer, html, js);
+      })
+      .catch((error) => displayException(error));
+  };
+
   document.addEventListener("click", (e) => {
     const elementId = e.target.id;
     if (!elementId) return;
@@ -48,9 +56,7 @@ export const init = (ID, isModerator, baseUrl) => {
 
       const { error, id } = response;
 
-      if (error) {
-        console.error(error);
-      }
+      if (error) render("mod_tutoom/view_page", { errorcode: error.errorCode });
 
       if (id) {
         const res = await getMeeting();
@@ -62,17 +68,15 @@ export const init = (ID, isModerator, baseUrl) => {
           minute: "2-digit",
         });
 
-        Templates.renderForPromise("mod_tutoom/main_section", {
+        const data = {
           meetingid: id,
           role: isModerator,
           meetingdate: meetingDate,
           participantscount: `${participantsCount}`,
           istextpluralparticipant: participantsCount > 1,
-        })
-          .then(({ html, js }) => {
-            Templates.replaceNodeContents(contentContainer, html, js);
-          })
-          .catch((error) => displayException(error));
+        };
+
+        render("mod_tutoom/main_section", data);
       }
     } catch (error) {
       console.error(error);
@@ -126,14 +130,10 @@ export const init = (ID, isModerator, baseUrl) => {
       }
 
       if (deleted) {
-        Templates.renderForPromise("mod_tutoom/main_section", {
+        render("mod_tutoom/main_section", {
           meetingid: null,
           role: isModerator,
-        })
-          .then(({ html, js }) => {
-            Templates.replaceNodeContents(contentContainer, html, js);
-          })
-          .catch((error) => displayException(error));
+        });
       }
     } catch (error) {
       console.error(error);
