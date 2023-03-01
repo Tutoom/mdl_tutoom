@@ -24,7 +24,7 @@
         "meetingid: "12345",
         "meetingdate": "10:00 AM",
         "participantscount": 0,
-        "role": true,
+        "ismoderator": true,
     }
 }}
 
@@ -60,15 +60,15 @@
         </div>
     {{/meetingid}}
     {{^meetingid}}
-        {{#role}}
+        {{#ismoderator}}
             <div class="d-flex align-items-center">
                 <img src='pix/icon-color_picker-outline.svg'>
                 <span class="ml-3">{{#str}} view_message_session_status_off, mod_tutoom {{/str}}</span>
             </div>
-        {{/role}}
-        {{^role}}
-            <h4 class='mb-0'>{{str.conference_in_progress}}</h4>
-        {{/role}}
+        {{/ismoderator}}
+        {{^ismoderator}}
+            <p class='mb-0'>{{#str}} view_message_room_not_initalized, mod_tutoom {{/str}}</p>
+        {{/ismoderator}}
     {{/meetingid}}
 </div>
 <div id="tutoom_view_action_button_box" class="py-3">
@@ -79,20 +79,20 @@
             </svg>
             {{#str}} view_conference_action_join, mod_tutoom {{/str}}
         </button>
-        {{#role}}
+        {{#ismoderator}}
             <button id='tutoom-end-button' class='btn btn-outline-danger' value='{{meetingid}}' style='border-radius: 5px;white-space:nowrap'>
                 {{#str}} view_conference_action_end, mod_tutoom {{/str}}
             </button>
-        {{/role}}
+        {{/ismoderator}}
     {{/meetingid}}
     {{^meetingid}}
-        {{#role}}
+        {{#ismoderator}}
             <button id='tutoom-start-button' class='btn btn-outline-dark' style='border-radius: 5px;white-space:nowrap'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
                     <path d="M8,15c-.1279,0-.2559-.0488-.3535-.1465-.1953-.1953-.1953-.5117,0-.707l4.1465-4.1465H3c-.2764,0-.5-.2236-.5-.5s.2236-.5,.5-.5H11.793L7.6465,4.8535c-.1953-.1953-.1953-.5117,0-.707s.5117-.1953,.707,0l4.999,4.9985c.0039,.0039,.0078,.0078,.0107,.0117h0q.001,.0005,.001,.001l.001,.0005h0c.042,.0454,.0752,.0967,.0967,.1514,.0225,.0542,.0361,.1133,.0381,.1753h0v.0303h0c-.002,.062-.0156,.1211-.0381,.1753-.0215,.0547-.0547,.106-.0967,.1514h0l-.001,.0005s0,.0005-.001,.001h0c-.0029,.0039-.0068,.0078-.0107,.0117l-4.999,4.9985c-.0977,.0977-.2256,.1465-.3535,.1465Z" style="fill:#343a40;"/>
                 </svg>
                 {{#str}} view_conference_action_start, mod_tutoom {{/str}}
             </button>
-        {{/role}}
+        {{/ismoderator}}
     {{/meetingid}}
 </div>

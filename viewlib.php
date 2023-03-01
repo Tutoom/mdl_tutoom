@@ -53,7 +53,7 @@ function tutoom_view_render($id, $moduleinstance, $ismoderator) {
     $data = array(
         'name' => $moduleinstance->name,
         "meetingid" => $meetingid,
-        "role" => $ismoderator,
+        "ismoderator" => $ismoderator,
         "recordings" => $recordings,
         "id" => $id,
         "baseurl" => $CFG->wwwroot.'/mod/tutoom/tutoom_ajax.php'
