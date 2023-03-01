@@ -24,7 +24,7 @@
         "meetingid: "12345",
         "meetingdate": "10:00 AM",
         "participantscount": 0,
-        "role": true,
+        "ismoderator": true,
         "id": 1
     }
 }}
@@ -47,8 +47,8 @@
 
     {{#js}}
         require(['mod_tutoom/activity'], function(module) {
-            const role = Boolean(parseInt({{#quote}}{{role}}{{/quote}}));
-            module.init({{#quote}}{{id}}{{/quote}},role,{{#quote}}{{baseurl}}{{/quote}});
+            const isModerator = Boolean(parseInt({{#quote}}{{ismoderator}}{{/quote}}));
+            module.init({{#quote}}{{id}}{{/quote}},isModerator,{{#quote}}{{baseurl}}{{/quote}});
         });
     {{/js}}
 {{/errorcode}}

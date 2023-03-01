@@ -70,7 +70,7 @@ export const init = (ID, isModerator, baseUrl) => {
 
         const data = {
           meetingid: id,
-          role: isModerator,
+          ismoderator: isModerator,
           meetingdate: meetingDate,
           participantscount: `${participantsCount}`,
           istextpluralparticipant: participantsCount > 1,
@@ -132,7 +132,7 @@ export const init = (ID, isModerator, baseUrl) => {
       if (deleted) {
         render("mod_tutoom/main_section", {
           meetingid: null,
-          role: isModerator,
+          ismoderator: isModerator,
         });
       }
     } catch (error) {
