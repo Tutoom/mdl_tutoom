@@ -21,34 +21,31 @@
 
     Example context (json):
     {
-        "meetingid: "12345",
-        "meetingdate": "10:00 AM",
-        "participantscount": 0,
-        "ismoderator": true,
+        "baseurl": "",
         "id": 1
+        "ismoderator": true,
+        "meetingid: "12345",
+        "name: "Tutoom's room name",
     }
 }}
 
 <h3 class="mb-0">{{name}}</h3>
 
-{{#errorcode}}
-    <p class="mb-0 mt-3">Error {{errorcode}}. {{#str}} view_page_error_general, mod_tutoom {{/str}}</p>
-{{/errorcode}}
-{{^errorcode}}
-    <div id='tutoom-content-box'>
-        {{>mod_tutoom/main_section}}
-    </div>
+<div id='tutoom-main-section'>
+    {{>mod_tutoom/main_section}}
+</div>
 
-    {{!
-        Recordings coming soon
+{{!
+    Recordings coming soon
 
-        >mod_tutoom/recordings_section
-    }}
+    >mod_tutoom/recordings_section
+}}
 
-    {{#js}}
-        require(['mod_tutoom/activity'], function(module) {
-            const isModerator = Boolean(parseInt({{#quote}}{{ismoderator}}{{/quote}}));
-            module.init({{#quote}}{{id}}{{/quote}},isModerator,{{#quote}}{{baseurl}}{{/quote}});
-        });
-    {{/js}}
-{{/errorcode}}
+{{#js}}
+    require(['mod_tutoom/activity'], function(module) {
+        const isModerator = Boolean(parseInt({{#quote}}{{ismoderator}}{{/quote}}));
+        module.init({{#quote}}{{id}}{{/quote}},isModerator,{{#quote}}{{baseurl}}{{/quote}});
+    });
+{{/js}}
+
+
