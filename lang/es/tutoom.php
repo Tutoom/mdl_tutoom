@@ -59,6 +59,7 @@ $string['view_conference_action_start'] = 'Iniciar sesión';
 $string['view_conference_action_join'] = 'Unirse a la sesión';
 $string['view_conference_action_end'] = 'Finalizar sesión';
 $string['view_message_room_not_initalized'] = 'La sala aún no ha iniciado.';
+$string['view_message_room_ended'] = 'Esta sala ha terminado. Haz clic <u id="tutoom-refresh-main-section" style="cursor: pointer;">aquí</u> para recargar la página.';
 $string['view_message_conference_in_this_room'] = 'en esta sala.';
 $string['view_message_session_status_on'] = 'EN LINEA';
 $string['view_message_session_status_off'] = 'DESCONECTADO';

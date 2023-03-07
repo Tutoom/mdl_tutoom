@@ -5,7 +5,6 @@ import { exception as displayException } from "core/notification";
 M.mod_tutoom = M.mod_tutoom || {};
 
 export const init = (ID, isModerator, baseUrl) => {
-  const contentContainer = document.getElementById("tutoom-content-box");
   const spinnerHTML =
     "<div class='spinner-border spinner-border-sm text-dark'></div>";
 
@@ -22,10 +21,12 @@ export const init = (ID, isModerator, baseUrl) => {
     return await window.fetch(url);
   };
 
-  const render = (location, data) => {
-    Templates.renderForPromise(location, data)
+  const renderTemplate = ({ data }) => {
+    const element = document.getElementById("tutoom-main-section");
+
+    Templates.renderForPromise("mod_tutoom/main_section", data)
       .then(({ html, js }) => {
-        Templates.replaceNodeContents(contentContainer, html, js);
+        Templates.replaceNodeContents(element, html, js);
       })
       .catch((error) => displayException(error));
   };
@@ -37,6 +38,7 @@ export const init = (ID, isModerator, baseUrl) => {
     if (elementId === "tutoom-start-button") startMeeting(e);
     if (elementId === "tutoom-end-button") endMeeting(e);
     if (elementId === "tutoom-join-button") joinMeeting(e);
+    if (elementId === "tutoom-refresh-main-section") clearMainSection(e);
   });
 
   const startMeeting = async (e) => {
@@ -56,7 +58,10 @@ export const init = (ID, isModerator, baseUrl) => {
 
       const { error, id } = response;
 
-      if (error) render("mod_tutoom/view_page", { errorcode: error.errorCode });
+      if (error) {
+        const data = { error: true, errorcode: error.errorCode };
+        renderTemplate({ data });
+      }
 
       if (id) {
         const res = await getMeeting();
@@ -76,7 +81,7 @@ export const init = (ID, isModerator, baseUrl) => {
           istextpluralparticipant: participantsCount > 1,
         };
 
-        render("mod_tutoom/main_section", data);
+        renderTemplate({ data });
       }
     } catch (error) {
       console.error(error);
@@ -97,8 +102,14 @@ export const init = (ID, isModerator, baseUrl) => {
     try {
       const url = `${baseUrl}?action=${ACTIONS.JOIN_MEETING}&sesskey=${M.cfg.sesskey}&id=${ID}`;
       const fetch = await window.fetch(url);
-      const response = await fetch.json();
-      window.location.href = response;
+      const { joinurl } = await fetch.json();
+
+      if (!joinurl || joinurl === null) {
+        const data = { error: true, meetingidnotexists: true };
+        renderTemplate({ data });
+      } else {
+        window.location.href = joinurl;
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -127,18 +138,25 @@ export const init = (ID, isModerator, baseUrl) => {
 
       if (error) {
         console.error(error);
+
+        if (error.meetingidnotexists) {
+          const data = { error: true, meetingidnotexists: true };
+          renderTemplate({ data });
+        }
       }
 
-      if (deleted) {
-        render("mod_tutoom/main_section", {
-          meetingid: null,
-          ismoderator: isModerator,
-        });
-      }
+      if (deleted) clearMainSection(e);
     } catch (error) {
       console.error(error);
     } finally {
       el.innerHTML = lastHTML;
     }
+  };
+
+  const clearMainSection = (e) => {
+    e.preventDefault();
+
+    const data = { meetingid: null, ismoderator: isModerator };
+    renderTemplate({ data });
   };
 };

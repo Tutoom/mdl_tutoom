@@ -83,6 +83,8 @@ class meeting {
 
             if (isset($results->isFinished) && $results->isFinished) {
                 $DB->set_field('tutoom', 'meetingid', null, array('id' => $recordid));
+
+                $results->meetingId = null;
             }
         }
 

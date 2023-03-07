@@ -42,8 +42,14 @@ function tutoom_view_render($id, $moduleinstance, $ismoderator) {
     $config = get_config("mod_tutoom");
     $accountid = $config->account_id;
 
+    $defaulterror = array(
+        'error' => true,
+        'name' => $moduleinstance->name,
+    );
+
     if (!isset($accountid) || $accountid == '') {
-        echo $OUTPUT->render_from_template("mod_tutoom/view_page", array('errorcode' => 500));
+        $error = array_merge($defaulterror, array('errorcode' => 500));
+        echo $OUTPUT->render_from_template("mod_tutoom/view_page", $error);
         return;
     }
 
@@ -52,28 +58,38 @@ function tutoom_view_render($id, $moduleinstance, $ismoderator) {
     $recordings = array();
     $data = array(
         'name' => $moduleinstance->name,
-        "meetingid" => $meetingid,
         "ismoderator" => $ismoderator,
-        "recordings" => $recordings,
         "id" => $id,
-        "baseurl" => $CFG->wwwroot.'/mod/tutoom/tutoom_ajax.php'
+        "baseurl" => $CFG->wwwroot.'/mod/tutoom/tutoom_ajax.php',
+        "recordings" => $recordings,
     );
 
-    if (isset($meetingid)) {
+    if (isset($meetingid) && $meetingid !== null) {
         $meeetinginfo = meeting::get_meeting_info($meetingid, $moduleinstance->id);
+
+        if (isset($meeetinginfo->isFinished) && $meeetinginfo->isFinished) {
+            $data["meetingid"] = null;
+            echo $OUTPUT->render_from_template("mod_tutoom/view_page", $data);
+            return;
+        }
 
         if(isset($meeetinginfo->error)){
             $errorcode = $meeetinginfo->error->errorCode;
-            echo $OUTPUT->render_from_template("mod_tutoom/view_page", array('errorcode' => $errorcode));
+            $error = array_merge($defaulterror, array('errorcode' => $errorcode));
+            echo $OUTPUT->render_from_template("mod_tutoom/view_page", $error);
             return;
         }
 
         $participantcount = $meeetinginfo->participantsCount;
         $seconds = $meeetinginfo->creationTimestamp->{"_seconds"};
 
+        $data["meetingid"] = $meetingid;
         $data["meetingdate"] = date("g:i A", $seconds * 1000);
         $data["participantscount"] = $participantcount;
         $data["istextpluralparticipant"] = $participantcount > 1;
+    }
+    else {
+        $data["meetingid"] = null;
     }
 
     echo $OUTPUT->render_from_template("mod_tutoom/view_page", $data);

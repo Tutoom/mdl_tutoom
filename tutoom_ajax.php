@@ -99,8 +99,14 @@ try {
 
     if ($action == 'join_meeting') {
         $appurl = $moduleinstance->urlapp;
-        $joinurl = meeting::join_meeting($meetingid, $fullname, $role, $appurl);
-        echo json_encode($joinurl);
+
+        if (isset($meetingid) && $meetingid !== null) {
+            $joinurl = meeting::join_meeting($meetingid, $fullname, $role, $appurl);
+            echo json_encode(array("joinurl" => $joinurl));
+        }
+        else {
+            echo json_encode(array("joinurl" => null));
+        }
 
         return;
     }
@@ -110,12 +116,21 @@ try {
         $coursename = $course->fullname;
         $logouturl = $params['logoutUrl'];
 
-        if (isset($meetingid) && $meetingid == $incomingmeetingid) {
-            $response = meeting::end_meeting($incomingmeetingid, $moduleinstance->id);
-            echo json_encode($response);
-
-            return;
+        if ($meetingid === null) {
+            $error = array("meetingidnotexists" => "meetingId not exists");
+            echo json_encode(array("error" => $error));
         }
+        else {
+            if ($meetingid === $incomingmeetingid) {
+                $response = meeting::end_meeting($incomingmeetingid, $moduleinstance->id);
+                echo json_encode($response);
+            }
+            else {
+                echo json_encode(array("error" => "Incoming meetingId is different"));
+            }
+        }
+
+        return;
     }
 
     if ($action == 'get_recordings') {

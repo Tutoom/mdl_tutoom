@@ -59,6 +59,7 @@ $string['view_conference_action_start'] = 'Start session';
 $string['view_conference_action_join'] = 'Join session';
 $string['view_conference_action_end'] = 'End session';
 $string['view_message_room_not_initalized'] = 'The room has not started.';
+$string['view_message_room_ended'] = 'This room has ended. Click <u id="tutoom-refresh-main-section" style="cursor: pointer;">here</u> to reload the page.';
 $string['view_message_conference_in_this_room'] = 'in this room';
 $string['view_message_session_status_on'] = 'ONLINE';
 $string['view_message_session_status_off'] = 'OFFLINE';
