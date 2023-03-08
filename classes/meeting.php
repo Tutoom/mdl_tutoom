@@ -81,6 +81,9 @@ class meeting {
             $results = json_decode($response);
             $results->meetingId = $meetingid;
 
+            $seconds = $results->creationTimestamp->{"_seconds"};
+            $results->meetingDate = date("g:i A", $seconds);
+
             if (isset($results->isFinished) && $results->isFinished) {
                 $DB->set_field('tutoom', 'meetingid', null, array('id' => $recordid));
 

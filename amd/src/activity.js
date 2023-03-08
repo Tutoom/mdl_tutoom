@@ -65,13 +65,7 @@ export const init = (ID, isModerator, baseUrl) => {
 
       if (id) {
         const res = await getMeeting();
-        const { creationTimestamp, participantsCount } = await res.json();
-
-        let meetingDate = new Date(creationTimestamp._seconds * 1000);
-        meetingDate = meetingDate.toLocaleTimeString(navigator.language, {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+        const { meetingDate, participantsCount } = await res.json();
 
         const data = {
           meetingid: id,
