@@ -8,7 +8,7 @@ Tutoom is a digital classroom with all tools you need: whiteboard tools, polls, 
 2. Setup plugin credentials
 3. Create course
 4. Add Tutoom activity inside course
-5. Join in the session 
+5. Join in the session
 
 For more information check our documentation [Setup & Plugins](https://help.tutoom.com/hc/en-us/sections/8524315989780-Moodle-Plugin)
 
@@ -26,6 +26,8 @@ We have compatibility with this moodle versions:
 
 | Moodle Versions    | Tutoom Version      |
 | ------------------ | ------------------- |
+| Moodle 3.9.0 - 4.0 | v0.1.4 (2022110303) |
+| Moodle 3.9.0 - 4.0 | v0.1.3 (2022110302) |
 | Moodle 3.9.0 - 4.0 | v0.1.1 (2022110300) |
 
 # Contact Us
