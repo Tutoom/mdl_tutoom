@@ -81,10 +81,10 @@ function tutoom_view_render($id, $moduleinstance, $ismoderator) {
         }
 
         $participantcount = $meeetinginfo->participantsCount;
-        $seconds = $meeetinginfo->creationTimestamp->{"_seconds"};
+        $meetingdate = $meeetinginfo->meetingDate;
 
         $data["meetingid"] = $meetingid;
-        $data["meetingdate"] = date("g:i A", $seconds * 1000);
+        $data["meetingdate"] = $meetingdate;
         $data["participantscount"] = $participantcount;
         $data["istextpluralparticipant"] = $participantcount > 1;
     }
