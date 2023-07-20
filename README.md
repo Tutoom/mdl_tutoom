@@ -26,6 +26,7 @@ We have compatibility with this moodle versions:
 
 | Moodle Versions    | Tutoom Version      |
 | ------------------ | ------------------- |
+| Moodle 3.9.0 - 4.2 | v0.1.5 (2022110304) |
 | Moodle 3.9.0 - 4.0 | v0.1.4 (2022110303) |
 | Moodle 3.9.0 - 4.0 | v0.1.3 (2022110302) |
 | Moodle 3.9.0 - 4.0 | v0.1.1 (2022110300) |
