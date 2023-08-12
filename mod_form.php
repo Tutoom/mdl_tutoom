@@ -40,6 +40,9 @@ class mod_tutoom_mod_form extends moodleform_mod {
     public function definition() {
         global $CFG, $DB;
 
+        $config = get_config("mod_tutoom");
+        $recordingenabled = (int) $config->recording_enabled;
+
         $course = null;
         $courseid = optional_param('course', 0, PARAM_INT);
 
@@ -63,6 +66,8 @@ class mod_tutoom_mod_form extends moodleform_mod {
         }
 
         $mform = $this->_form;
+
+        $this->tutoom_mform_add_block_profiles($mform);
 
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -97,10 +102,25 @@ class mod_tutoom_mod_form extends moodleform_mod {
         );
         $mform->setDefault('welcomemessage', get_string('mod_form_field_welcome_default_message', 'mod_tutoom'));
 
+        $mform->addElement('checkbox', 'record', get_string('mod_form_field_record', 'mod_tutoom'));
+        $mform->setDefault("record", $recordingenabled);
+
         // Add standard elements.
         $this->standard_coursemodule_elements();
 
         // Add standard buttons.
         $this->add_action_buttons();
+    }
+
+    /**
+     * Function for showing the block for selecting profiles.
+     *
+     * @param MoodleQuickForm $mform
+     * @return void
+     */
+    private function tutoom_mform_add_block_profiles(MoodleQuickForm &$mform): void {
+        $mform->addElement('select', 'type', get_string('mod_form_field_room_type', 'mod_tutoom'),
+            tutoom_get_name_of_room_type());
+        $mform->addHelpButton('type', 'mod_form_field_room_type', 'mod_tutoom');
     }
 }

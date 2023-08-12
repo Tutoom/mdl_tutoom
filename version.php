@@ -25,13 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_tutoom';
-$plugin->release = '0.1.5';
-$plugin->version = 2022110304;
-$plugin->requires = 2020061500; // Moodle 3.9.0.
-$plugin->supported = [
-    // Support from the Moodle 3.9 series.
-    39,
-    // To the Moodle 4.2 series.
-    42
-];
-$plugin->maturity = MATURITY_RC;
+$plugin->release = '0.2.0';
+$plugin->version = 2023080900;
+$plugin->requires = 2020061500;
+$plugin->supported = [39,42];
+$plugin->maturity = MATURITY_STABLE;

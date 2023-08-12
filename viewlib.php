@@ -23,6 +23,7 @@
  */
 
 use mod_tutoom\meeting;
+use mod_tutoom\recording;
 use mod_tutoom\local\config;
 
 defined('MOODLE_INTERNAL') || die;
@@ -53,19 +54,56 @@ function tutoom_view_render($id, $moduleinstance, $ismoderator) {
         return;
     }
 
+    $tutoomid = $moduleinstance->id;
     $meetingid = $moduleinstance->meetingid;
+    $courseid = $moduleinstance->course;
+    $typeroom = $moduleinstance->type;
+    $isroomwithrecordings = $typeroom === strval(TUTOOM_TYPE_ALL);
+    $isroomonly = $typeroom === strval(TUTOOM_TYPE_ROOM_ONLY);
+    $isrecordingonly = $typeroom === strval(TUTOOM_TYPE_RECORDING_ONLY);
 
-    $recordings = array();
+    $showrecordings = $isroomwithrecordings || $isrecordingonly;
+    $showroominformation = $isroomwithrecordings || $isroomonly;
+
     $data = array(
         'name' => $moduleinstance->name,
         "ismoderator" => $ismoderator,
         "id" => $id,
         "baseurl" => $CFG->wwwroot.'/mod/tutoom/tutoom_ajax.php',
-        "recordings" => $recordings,
+        "showrecordings" => $showrecordings,
+        "showroominformation" => $showroominformation,
     );
 
+    // If recordings is enabled, getting the count of recordings.
+    if($showrecordings) {
+        $getcountrecordingsinfo = recording::get_count_recordings($courseid);
+
+        if(isset($getcountrecordingsinfo->error)){
+            $errorcode = $getcountrecordingsinfo->error->errorCode;
+            $error = array_merge($defaulterror, array('errorcode' => $errorcode));
+            echo $OUTPUT->render_from_template("mod_tutoom/view_page", $error);
+            return;
+        }
+
+        $countrecordings = (int) $getcountrecordingsinfo->count;
+        $limitrecordings = (int) $getcountrecordingsinfo->limit;
+
+        $data = array_merge($data, array(
+            "countrecordings" => $countrecordings,
+            "limitrecordings" => $limitrecordings
+        ));
+
+        // Recording is empty.
+        if($countrecordings === 0){
+            $data = array_merge($data, array(
+                "isemptyrecordings" => true,
+            ));
+        }
+
+    }
+
     if (isset($meetingid) && $meetingid !== null) {
-        $meeetinginfo = meeting::get_meeting_info($meetingid, $moduleinstance->id);
+        $meeetinginfo = meeting::get_meeting_info($meetingid, $tutoomid);
 
         if (isset($meeetinginfo->isFinished) && $meeetinginfo->isFinished) {
             $data["meetingid"] = null;

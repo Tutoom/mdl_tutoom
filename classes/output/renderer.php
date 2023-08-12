@@ -18,6 +18,12 @@ namespace mod_tutoom\output;
 
 use plugin_renderer_base;
 
+use admin_setting_configcheckbox;
+use admin_setting_configmultiselect;
+use admin_setting_configselect;
+use admin_setting_configtext;
+use admin_setting_heading;
+
 /**
  * Renderer for the mod_tutoom plugin.
  *
@@ -56,7 +62,7 @@ class renderer extends plugin_renderer_base {
         if ($itemdescription === null) {
             $itemdescription = get_string('config_' . $name . '_description', 'tutoom');
         }
-        $item = new \admin_setting_heading('tutoom_config_' . $name, $itemname, $itemdescription);
+        $item = new admin_setting_heading('tutoom_config_' . $name, $itemname, $itemdescription);
         $this->settings->add($item);
     }
 
@@ -70,7 +76,7 @@ class renderer extends plugin_renderer_base {
      * @return Object
      */
     public function render_group_element_text($name, $default = null, $type = PARAM_RAW) {
-        $item = new \admin_setting_configtext(
+        $item = new admin_setting_configtext(
             'mod_tutoom/' . $name,
             get_string('config_' . $name, 'tutoom'),
             get_string('config_' . $name . '_description', 'tutoom'),
@@ -88,12 +94,12 @@ class renderer extends plugin_renderer_base {
      *
      * @return Object
      */
-    public function render_group_element_checkbox($name, $default = null) {
-        $item = new \admin_setting_configcheckbox(
+    public function render_group_element_checkbox($name, $default = 0) {
+        $item = new admin_setting_configcheckbox(
             'mod_tutoom/' . $name,
             get_string('config_' . $name, 'tutoom'),
             get_string('config_' . $name . '_description', 'tutoom'),
-            $default
+            $default,
         );
         $this->settings->add($item);
     }
@@ -108,7 +114,7 @@ class renderer extends plugin_renderer_base {
      * @return Object
      */
     public function render_group_element_configmultiselect($name, $defaultsetting, $choices) {
-        $item = new \admin_setting_configmultiselect(
+        $item = new admin_setting_configmultiselect(
             'mod_tutoom/' . $name,
             get_string('config_' . $name, 'tutoom'),
             get_string('config_' . $name . '_description', 'tutoom'),
@@ -128,7 +134,7 @@ class renderer extends plugin_renderer_base {
      * @return Object
      */
     public function render_group_element_configselect($name, $defaultsetting, $choices) {
-        $item = new \admin_setting_configselect(
+        $item = new admin_setting_configselect(
             'mod_tutoom/' . $name,
             get_string('config_' . $name, 'tutoom'),
             get_string('config_' . $name . '_description', 'tutoom'),

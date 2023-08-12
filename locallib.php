@@ -28,6 +28,13 @@ global $CFG;
 
 require_once(__DIR__ . '/lib.php');
 
+/** @var TUTOOM_TYPE_ALL integer set to 0 defines an instance type that inclueds room and recordings */
+const TUTOOM_TYPE_ALL = 0;
+/** @var TUTOOM_TYPE_ROOM_ONLY integer set to 1 defines an instance type that inclueds only room */
+const TUTOOM_TYPE_ROOM_ONLY = 1;
+/** @var TUTOOM_TYPE_RECORDING_ONLY integer set to 2 defines an instance type that inclueds only recordings */
+const TUTOOM_TYPE_RECORDING_ONLY = 2;
+
 /**
  * Helper generates a random password.
  *
@@ -71,6 +78,11 @@ function tutoom_settings_general(&$renderer) {
     $renderer->render_group_header('general');
     $renderer->render_group_element_text('account_id', '');
     $renderer->render_group_element_text('account_secret', '');
+    $renderer->render_group_element_checkbox('activity_logs', 0);
+
+    $renderer->render_group_header('recording');
+    $renderer->render_group_element_checkbox('recording_enabled', 1);
+    $renderer->render_group_element_checkbox('recording_auto_start', 0);
 }
 
 /**
@@ -127,3 +139,43 @@ function tuttom_generate_params_to_url($bodyorparams) {
     return $params;
 }
 
+/**
+ * Helper function returns an array with the profiles (with features per profile) for the different types
+ * of tutoom instances.
+ *
+ * @return array
+ */
+function tutoom_get_room_type_profiles() {
+    $instanceprofiles = array(
+        TUTOOM_TYPE_ALL => array(
+            'id' => TUTOOM_TYPE_ALL,
+            'name' => get_string('room_type_room_with_recordings', 'mod_tutoom'),
+            'features' => array()),
+        TUTOOM_TYPE_ROOM_ONLY => array(
+            'id' => TUTOOM_TYPE_ROOM_ONLY,
+            'name' => get_string('room_type_room_only', 'mod_tutoom'),
+            'features' => array()),
+        TUTOOM_TYPE_RECORDING_ONLY => array(
+            'id' => TUTOOM_TYPE_RECORDING_ONLY,
+            'name' => get_string('room_type_recording_only', 'mod_tutoom'),
+            'features' => array()),
+    );
+    return $instanceprofiles;
+}
+
+/**
+ * Helper function returns an array with the profiles (with features per profile) for the different types
+ * of bigbluebuttonbn instances.
+ *
+ * @param array $profiles
+ * @return array
+ */
+function tutoom_get_name_of_room_type() {
+    $profiles = tutoom_get_room_type_profiles();
+
+    $profilesarray = array();
+    foreach ($profiles as $key => $profile) {
+        $profilesarray[$profile['id']] = $profile['name'];
+    }
+    return $profilesarray;
+}

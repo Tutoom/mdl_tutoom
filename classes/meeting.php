@@ -18,6 +18,7 @@ namespace mod_tutoom;
 
 defined('MOODLE_INTERNAL') || die;
 require_once(__DIR__ . '../../locallib.php');
+require_once(__DIR__ . '../../lib.php');
 require_once($CFG->libdir . '/filelib.php');
 
 use curl;
@@ -39,14 +40,14 @@ class meeting {
      * Return meeting information.
      *
      * @param string $meetingid
-     * @param string $recordid
+     * @param string $tutoomid
      * @return stdClass
      */
-    public static function get_meeting_info(string $meetingid, string $recordid): stdClass {
+    public static function get_meeting_info(string $meetingid, string $tutoomid): stdClass {
         global $DB;
 
         $cfg = config::get_options();
-        $apiurl = $cfg["api_url"];
+        $apiurl = $cfg["tutoom_backend_api_url"];
 
         $config = get_config("mod_tutoom");
         $accountid = $config->account_id;
@@ -85,7 +86,7 @@ class meeting {
             $results->meetingDate = date("g:i A", $seconds);
 
             if (isset($results->isFinished) && $results->isFinished) {
-                $DB->set_field('tutoom', 'meetingid', null, array('id' => $recordid));
+                $DB->set_field('tutoom', 'meetingid', null, array('id' => $tutoomid));
 
                 $results->meetingId = null;
             }
@@ -94,21 +95,26 @@ class meeting {
         return $results;
     }
 
+
     /**
      * Generate a url to connect to a tutoom meeting.
      *
      * @param string $meetingid
      * @param string $fullname
      * @param string $role MODERATOR or VIEWER
-     * @param string $appurl
+     * @param string $tutoomid
      * @return string
      */
-    public static function join_meeting(string $meetingid, string $fullname, string $role, string $appurl): string {
-        global $USER;
+    public static function join_meeting(string $meetingid, string $fullname, string $role, string $tutoomid): string {
+        global $DB, $USER;
+
+        $cfg = config::get_options();
+        $appurl = $cfg["tutoom_app_url"];
 
         $config = get_config("mod_tutoom");
         $accountid = $config->account_id;
         $accountsecret = $config->account_secret;
+        $activity_logs_enabled = $config->activity_logs === "1";
 
         $requesttimestamp = time();
         $checksumrequest = json_decode("{
@@ -126,45 +132,57 @@ class meeting {
 
         $joinurl = $appurl . '/join?' . $queryparams;
 
+        // Add join log.
+        if($activity_logs_enabled){
+            $data = new stdClass();
+
+            $tutoom = $DB->get_record('tutoom', array('id' => $tutoomid));
+
+            $data->course = $tutoom->course;
+            $data->id = $tutoomid;
+            $data->meetingid = $meetingid;
+
+            tutoom_log($data, TUTOOM_LOG_EVENT_JOIN_MEETING);
+        }
+
         return $joinurl;
     }
 
     /**
      * Creates a tutoom meeting.
      *
-     * @param string $classid
+     * @param string $courseid
      * @param string $logouturl
      * @param string $coursename
      * @param string $welcomemessage
-     * @param string $recordid
+     * @param string $tutoomid
+     * @param bool $recordingenabled
      * @return stdClass
      */
-    public static function create_meeting(
-        string $classid,
-        string $logouturl,
-        string $coursename,
-        string $welcomemessage,
-        string $recordid
-    ): stdClass {
+    public static function create_meeting(string $courseid, string $logouturl, string $coursename, string $welcomemessage, string $tutoomid, bool $recordingenabled): stdClass {
         global $DB;
 
         $cfg = config::get_options();
-        $apiurl = $cfg["api_url"];
+        $apiurl = $cfg["tutoom_backend_api_url"];
 
         $config = get_config("mod_tutoom");
         $accountid = $config->account_id;
         $accountsecret = $config->account_secret;
+        $activity_logs_enabled = $config->activity_logs === "1";
+        $recordingautostart = $config->recording_auto_start === "1" ? "true" : "false";
+        $recordingenabled = $recordingenabled ? "true" : "false";
 
         $results = new stdClass();
 
         $requesttimestamp = time();
         $checksumrequest = json_decode("{
             \"accountId\": \"$accountid\",
+            \"autoStartRecording\": \"$recordingautostart\",
             \"checksum\": \"\",
-            \"classId\": \"$classid\",
-            \"isMoodleSource\": \"true\",
+            \"externalId\": \"$courseid\",
             \"logoutUrl\": \"$logouturl\",
             \"name\": \"$coursename\",
+            \"record\": \"$recordingenabled\",
             \"requestTimestamp\": $requesttimestamp,
             \"welcomeMessage\": \"$welcomemessage\"
         }");
@@ -187,11 +205,20 @@ class meeting {
             $jsonresponse = json_decode($response);
 
             $meetingid = $jsonresponse->id;
-            $DB->set_field('tutoom', 'meetingid', $meetingid, array('id' => $recordid));
+            $DB->set_field('tutoom', 'meetingid', $meetingid, array('id' => $tutoomid));
 
-            // Set urlapp field to BD which comes from backend API.
-            $appurl = $jsonresponse->urlApp;
-            $DB->set_field('tutoom', 'urlapp', $appurl, array('id' => $recordid));
+            // Add create log.
+            if($activity_logs_enabled){
+                $data = new stdClass();
+
+                $tutoom = $DB->get_record('tutoom', array('id' => $tutoomid));
+
+                $data->course = $tutoom->course;
+                $data->id = $tutoomid;
+                $data->meetingid = $meetingid;
+
+                tutoom_log($data, TUTOOM_LOG_EVENT_CREATE_MEETING);
+            }
 
             $results->id = $meetingid;
         }
@@ -203,18 +230,19 @@ class meeting {
      * End tutoom meeting.
      *
      * @param string $incomingmeetingid
-     * @param string $recordid
+     * @param string $tutoomid
      * @return stdClass
      */
-    public static function end_meeting(string $incomingmeetingid, string $recordid): stdClass {
+    public static function end_meeting(string $incomingmeetingid, string $tutoomid): stdClass {
         global $DB;
 
         $cfg = config::get_options();
-        $apiurl = $cfg["api_url"];
+        $apiurl = $cfg["tutoom_backend_api_url"];
 
         $config = get_config("mod_tutoom");
         $accountid = $config->account_id;
         $accountsecret = $config->account_secret;
+        $activity_logs_enabled = $config->activity_logs === "1";
 
         $results = new stdClass();
 
@@ -242,9 +270,21 @@ class meeting {
         if ($curl->error || $info['http_code'] >= 300){
             $results->error = strlen($curl->error) > 0 ? $curl->error : $response;
         } else {
-            $DB->set_field('tutoom', 'meetingid', null, array('id' => $recordid));
-            $DB->set_field('tutoom', 'urlapp', null, array('id' => $recordid));
+            $DB->set_field('tutoom', 'meetingid', null, array('id' => $tutoomid));
             $results->deleted = true;
+
+            // Add end log.
+            if($activity_logs_enabled){
+                $data = new stdClass();
+
+                $tutoom = $DB->get_record('tutoom', array('id' => $tutoomid));
+
+                $data->course = $tutoom->course;
+                $data->id = $tutoomid;
+                $data->meetingid = $incomingmeetingid;
+
+                tutoom_log($data, TUTOOM_LOG_EVENT_END_MEETING);
+            }
         }
 
         return $results;

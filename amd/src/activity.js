@@ -1,156 +1,80 @@
 /* eslint-disable */
-import Templates from "core/templates";
-import { exception as displayException } from "core/notification";
+
+import {
+  clearMainSection,
+  endMeeting,
+  joinMeeting,
+  startMeeting,
+} from "./meeting";
+import { getRecordings } from "./recording";
 
 M.mod_tutoom = M.mod_tutoom || {};
 
-export const init = (ID, isModerator, baseUrl) => {
-  const spinnerHTML =
-    "<div class='spinner-border spinner-border-sm text-dark'></div>";
+export const init = (params) => {
+  window.tutoom = params;
 
-  const ACTIONS = {
-    GET_MEETING: "get_meeting",
-    START_MEETING: "start_meeting",
-    JOIN_MEETING: "join_meeting",
-    END_MEETING: "end_meeting",
-    GET_RECORDINGS: "get_recordings",
-  };
+  const { showRecordings } = params;
 
-  const getMeeting = async () => {
-    const url = `${baseUrl}?action=${ACTIONS.GET_MEETING}&sesskey=${M.cfg.sesskey}&id=${ID}`;
-    return await window.fetch(url);
-  };
-
-  const renderTemplate = ({ data }) => {
-    const element = document.getElementById("tutoom-main-section");
-
-    Templates.renderForPromise("mod_tutoom/main_section", data)
-      .then(({ html, js }) => {
-        Templates.replaceNodeContents(element, html, js);
-      })
-      .catch((error) => displayException(error));
-  };
-
-  document.addEventListener("click", (e) => {
+  document.addEventListener("click", async (e) => {
+    const elementName = e.target.name;
     const elementId = e.target.id;
-    if (!elementId) return;
 
-    if (elementId === "tutoom-start-button") startMeeting(e);
-    if (elementId === "tutoom-end-button") endMeeting(e);
-    if (elementId === "tutoom-join-button") joinMeeting(e);
-    if (elementId === "tutoom-refresh-main-section") clearMainSection(e);
-  });
+    if (elementId) {
+      if (elementId === "tutoom-start-button") startMeeting(e);
+      if (elementId === "tutoom-end-button") endMeeting(e);
+      if (elementId === "tutoom-join-button") joinMeeting(e);
+      if (elementId === "tutoom-refresh-main-section") clearMainSection(e);
 
-  const startMeeting = async (e) => {
-    e.preventDefault();
+      if (elementId === "tutoom-recordings-btn-previous") {
+        const classNames = e.target.className;
+        if (classNames.includes("disabled")) {
+          e.preventDefault();
+        } else {
+          const currentPage = document.getElementById(
+            "tutoom-recordings-current-page"
+          ).value;
 
-    const el = document.getElementById("tutoom-start-button");
-    const widthButton = el.offsetWidth;
-    const lastHTML = el.innerHTML;
-
-    el.style.width = `${widthButton}px`;
-    el.innerHTML = spinnerHTML;
-
-    try {
-      const url = `${baseUrl}?action=${ACTIONS.START_MEETING}&sesskey=${M.cfg.sesskey}&id=${ID}&logoutUrl=${window.location.href}`;
-      const fetch = await window.fetch(url);
-      const response = await fetch.json();
-
-      const { error, id } = response;
-
-      if (error) {
-        const data = { error: true, errorcode: error.errorCode };
-        renderTemplate({ data });
-      }
-
-      if (id) {
-        const res = await getMeeting();
-        const { meetingDate, participantsCount } = await res.json();
-
-        const data = {
-          meetingid: id,
-          ismoderator: isModerator,
-          meetingdate: meetingDate,
-          participantscount: `${participantsCount}`,
-          istextpluralparticipant: participantsCount > 1,
-        };
-
-        renderTemplate({ data });
-      }
-    } catch (error) {
-      console.error(error);
-      el.innerHTML = lastHTML;
-    }
-  };
-
-  const joinMeeting = async (e) => {
-    e.preventDefault();
-
-    const el = document.getElementById("tutoom-join-button");
-    const widthButton = el.offsetWidth;
-    const lastHTML = el.innerHTML;
-
-    el.style.width = `${widthButton}px`;
-    el.innerHTML = spinnerHTML;
-
-    try {
-      const url = `${baseUrl}?action=${ACTIONS.JOIN_MEETING}&sesskey=${M.cfg.sesskey}&id=${ID}`;
-      const fetch = await window.fetch(url);
-      const { joinurl } = await fetch.json();
-
-      if (!joinurl || joinurl === null) {
-        const data = { error: true, meetingidnotexists: true };
-        renderTemplate({ data });
-      } else {
-        window.location.href = joinurl;
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      el.innerHTML = lastHTML;
-    }
-  };
-
-  const endMeeting = async (e) => {
-    e.preventDefault();
-
-    const value = e.target.value;
-
-    const el = document.getElementById("tutoom-end-button");
-    const widthButton = el.offsetWidth;
-    const lastHTML = el.innerHTML;
-
-    el.style.width = `${widthButton}px`;
-    el.innerHTML = `<div class='spinner-border spinner-border-sm text-danger'></div>`;
-
-    try {
-      const url = `${baseUrl}?action=${ACTIONS.END_MEETING}&sesskey=${M.cfg.sesskey}&id=${ID}&meetingId=${value}`;
-      const fetch = await window.fetch(url);
-      const response = await fetch.json();
-
-      const { error, deleted } = response;
-
-      if (error) {
-        console.error(error);
-
-        if (error.meetingidnotexists) {
-          const data = { error: true, meetingidnotexists: true };
-          renderTemplate({ data });
+          await getRecordings({ page: parseInt(currentPage) - 1 });
         }
       }
 
-      if (deleted) clearMainSection(e);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      el.innerHTML = lastHTML;
+      if (elementId === "tutoom-recordings-btn-next") {
+        const classNames = e.target.className;
+        if (classNames.includes("disabled")) {
+          e.preventDefault();
+        } else {
+          const currentPage = document.getElementById(
+            "tutoom-recordings-current-page"
+          ).value;
+
+          await getRecordings({ page: parseInt(currentPage) + 1 });
+        }
+      }
     }
-  };
 
-  const clearMainSection = (e) => {
-    e.preventDefault();
+    if (elementName) {
+      if (elementName === "btn-page") {
+        const page = parseInt(e.target.value);
+        const currentPage = parseInt(
+          document.getElementById("tutoom-recordings-current-page").value
+        );
 
-    const data = { meetingid: null, ismoderator: isModerator };
-    renderTemplate({ data });
-  };
+        if (currentPage === page) {
+          e.preventDefault();
+          return;
+        }
+
+        await getRecordings({ page });
+      }
+    }
+  });
+
+  setTimeout(async () => {
+    if (showRecordings) {
+      const { countRecordings } = params;
+      if (countRecordings > 0) {
+        await getRecordings({ page: 1, isFirstTime: true });
+      }
+    }
+  }, 1);
 };
