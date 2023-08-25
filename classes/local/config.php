@@ -28,7 +28,7 @@ class config {
     public const TUTOOM_BACKEND_API_URL = 'https://api.tutoom.com/v1.1/';
 
     /** @var string Default tutoom app url */
-    public const TUTOOM_APP_URL = 'https://tutoom.app';
+    public const TUTOOM_APP_URL = 'https://tutoom.app/api/v1';
 
     /** @var string Default tutoom playback app url */
     public const TUTOOM_PLAYBACK_APP_URL = 'https://playback.tutoom.app/api/v1';
