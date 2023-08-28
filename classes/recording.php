@@ -38,13 +38,13 @@ class recording {
     /**
      * Return list of recordings. It can return empty list too.
      *
-     * @param string $classid
+     * @param string $externalid
      * @param int $page
      * @return stdClass
      */
-    public static function get_recordings(string $classid, int $page = 1): stdClass {
+    public static function get_recordings(string $externalid, int $page = 1): stdClass {
         $cfg = config::get_options();
-        $apiurl = $cfg["api_url"];
+        $apiurl = $cfg["tutoom_backend_api_url"];
 
         $config = get_config("mod_tutoom");
         $accountid = $config->account_id;
@@ -56,7 +56,7 @@ class recording {
         $checksumrequest = json_decode("{
             \"accountId\": \"$accountid\",
             \"checksum\": \"\",
-            \"externalClassId\": \"$classid\",
+            \"externalId\": \"$externalid\",
             \"limit\": 5,
             \"page\": $page,
             \"requestTimestamp\": $requesttimestamp
@@ -69,19 +69,101 @@ class recording {
 
         $curl = new curl();
         $curl->setopt(array(
-            'CURLOPT_FAILONERROR' => true,
             'CURLOPT_RETURNTRANSFER' => true,
             'CURLOPT_HTTPHEADER' => array('Content-Type: application/json')
         ));
         $response = $curl->get($url);
         $info = $curl->get_info();
 
-        if ($curl->error || $info['http_code'] >= 300){
-            $results->error = strlen($curl->error) > 0 ? $curl->error : $response;
+        if ($info['http_code'] >= 300){
+            $results->error = json_decode($response);
         } else {
-            $results->data = json_decode($response);
+            $results = json_decode($response);
         }
 
         return $results;
+    }
+
+    /**
+     * Return count of recordings.
+     *
+     * @param string $externalid
+     * @return stdClass
+     */
+    public static function get_count_recordings(string $externalid): stdClass {
+        $cfg = config::get_options();
+        $apiurl = $cfg["tutoom_backend_api_url"];
+
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
+
+        $results = new stdClass();
+
+        $requesttimestamp = time();
+        $checksumrequest = json_decode("{
+            \"accountId\": \"$accountid\",
+            \"checksum\": \"\",
+            \"externalId\": \"$externalid\",
+            \"requestTimestamp\": $requesttimestamp
+        }");
+
+        $params = tuttom_generate_checksum('get', "recordings/count", $checksumrequest, $accountsecret);
+        $paramstourl = http_build_query($params, '&amp;', '&');
+
+        $url = $apiurl . "recordings/count" . "?" . $paramstourl;
+
+        $curl = new curl();
+        $curl->setopt(array(
+            'CURLOPT_RETURNTRANSFER' => true,
+            'CURLOPT_HTTPHEADER' => array('Content-Type: application/json')
+        ));
+        $response = $curl->get($url);
+        $info = $curl->get_info();
+
+        if ($info['http_code'] >= 300){
+            $results->error = json_decode($response);
+        } else {
+            $results = json_decode($response);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Generate a url to connect to a tutoom meeting.
+     *
+     * @param string $meetingid
+     * @return string
+     */
+    public static function join_playback(string $meetingid): string {
+        global $USER;
+
+        $cfg = config::get_options();
+        $playbackurl = $cfg["playback_app_url"];
+
+        $config = get_config("mod_tutoom");
+        $accountid = $config->account_id;
+        $accountsecret = $config->account_secret;
+
+        $userid = $USER->id;
+        $userfullname = "$USER->firstname $USER->lastname";
+
+        $requesttimestamp = time();
+        $checksumrequest = json_decode("{
+            \"accountId\": \"$accountid\",
+            \"checksum\": \"\",
+            \"meetingId\": \"$meetingid\",
+            \"name\": \"$userfullname\",
+            \"requestTimestamp\": $requesttimestamp,
+            \"userId\": \"$userid\"
+        }");
+
+        $params = tuttom_generate_checksum('get', 'join', $checksumrequest, $accountsecret);
+        $queryparams = tuttom_generate_params_to_url($params);
+
+        $joinurl = $playbackurl . '/join?' . $queryparams;
+
+        return $joinurl;
     }
 }

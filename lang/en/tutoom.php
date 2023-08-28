@@ -47,12 +47,27 @@ $string['config_account_secret'] = 'Tutoom secret key';
 $string['config_account_secret_description'] = 'The secret key of your organization Tutoom account';
 $string['config_general'] = 'General configuration';
 $string['config_general_description'] = 'These settings are <b>always</b> used';
+$string['config_activity_logs'] = 'Write activity logs';
+$string['config_activity_logs_description'] = 'This option save logs when a room is created, deleted and user join to the room.';
+$string['config_recording'] = 'Recording';
+$string['config_recording_description'] = 'These settings are feature specific';
+$string['config_recording_enabled'] = 'Recording enabled by default';
+$string['config_recording_enabled_description'] = "Session can be recorded by default. Can be editable in the Tuttom activity settings";
+$string['config_recording_auto_start'] = 'Recording auto start';
+$string['config_recording_auto_start_description'] = "If the option is checked, rooms will start recording when moderator get in.";
 
 // Initial form.
 $string['tutoomname'] = 'Name';
 $string['mod_form_block_room'] = 'Activity/Room settings';
 $string['mod_form_field_welcome'] = 'Welcome message';
 $string['mod_form_field_welcome_default_message'] = 'Welcome to the class. Feel free to ask any question.';
+$string['mod_form_field_record'] = 'Session can be recorded';
+$string['mod_form_field_room_type'] = 'Room type';
+$string['mod_form_field_room_type_help'] = 'Select the room type for this Tutoom.';
+
+$string['room_type_room_with_recordings'] = 'Room with recordings';
+$string['room_type_room_only'] = 'Room only';
+$string['room_type_recording_only'] = 'Recording only';
 
 // Room info.
 $string['view_conference_action_start'] = 'Start session';
@@ -80,6 +95,7 @@ $string['recording_time'] = 'Time';
 $string['recording_duration'] = 'Duration';
 $string['recording_toolbar'] = 'Toolbar';
 $string['recording_text_empty'] = 'No recordings so far...';
+$string['recording_loading'] = 'Getting recordings...';
 $string['message_loading'] = 'Please wait...';
 $string['pagination_previous'] = 'Previous';
 $string['pagination_next'] = 'Next';

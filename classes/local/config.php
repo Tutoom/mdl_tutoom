@@ -25,7 +25,13 @@ namespace mod_tutoom\local;
  */
 class config {
     /** @var string Default tutoom api url */
-    public const API_URL = 'https://api.tutoom.com/v1/';
+    public const TUTOOM_BACKEND_API_URL = 'https://api.tutoom.com/v1.1/';
+
+    /** @var string Default tutoom app url */
+    public const TUTOOM_APP_URL = 'https://tutoom.app/api/v1';
+
+    /** @var string Default tutoom playback app url */
+    public const TUTOOM_PLAYBACK_APP_URL = 'https://playback.tutoom.app/api/v1';
 
     /** @var string Defines name of moderator role */
     public const MODERATOR_ROLE = 'MODERATOR';
@@ -40,7 +46,9 @@ class config {
      */
     public static function defaultvalues() {
         return array(
-            'api_url' => self::API_URL,
+            'tutoom_backend_api_url' => self::TUTOOM_BACKEND_API_URL,
+            'tutoom_app_url' => self::TUTOOM_APP_URL,
+            'playback_app_url' => self::TUTOOM_PLAYBACK_APP_URL,
             'moderator_role' => self::MODERATOR_ROLE,
             'viewer_role' => self::VIEWER_ROLE,
         );
@@ -77,7 +85,9 @@ class config {
      */
     public static function get_options() {
         return array(
-            'api_url' => self::get("api_url"),
+            'tutoom_backend_api_url' => self::get("tutoom_backend_api_url"),
+            'tutoom_app_url' => self::get("tutoom_app_url"),
+            'playback_app_url' => self::get("playback_app_url"),
             'moderator_role' => self::get("moderator_role"),
             'viewer_role' => self::get("viewer_role"),
         );

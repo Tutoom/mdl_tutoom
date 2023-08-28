@@ -47,12 +47,27 @@ $string['config_account_secret'] = 'Clave secreta Tutoom';
 $string['config_account_secret_description'] = 'Clave secreta de tu cuenta de Tutoom de tu organización';
 $string['config_general'] = 'Configuración general';
 $string['config_general_description'] = 'Estas configuraciones seran usadas <b>siempre</b>';
+$string['config_activity_logs'] = 'Escribir registros de actividad';
+$string['config_activity_logs_description'] = 'Esta opción guarda registros cuando se crea una sala, elimina una sala y accede un usuario a la sala.';
+$string['config_recording'] = 'Grabaciones';
+$string['config_recording_description'] = 'Estos ajustes son caracteristicas específicos';
+$string['config_recording_enabled'] = 'Grabación habilitada por defecto';
+$string['config_recording_enabled_description'] = "La sesión se puede grabar de forma predeterminada. Se puede editar en la configuración de la actividad de Tutoom";
+$string['config_recording_auto_start'] = 'Grabación automática';
+$string['config_recording_auto_start_description'] = "Si la opción está marcada, la grabación iniciará automáticamente cuando ingrese el moderador.";
 
 // Initial form.
 $string['tutoomname'] = 'Nombre';
 $string['mod_form_block_room'] = 'Configuración de Actividades/Salones';
 $string['mod_form_field_welcome'] = 'Mensaje de Bienvenida';
 $string['mod_form_field_welcome_default_message'] = 'Bienvenido a la clase. Sientete libre de hacer cualquier pregunta.';
+$string['mod_form_field_record'] = 'Grabar la sesión';
+$string['mod_form_field_room_type'] = 'Tipo de reunión';
+$string['mod_form_field_room_type_help'] = 'Seleccione el tipo de habitación para este Tutoom.';
+
+$string['room_type_room_with_recordings'] = 'Reunión con grabaciones';
+$string['room_type_room_only'] = 'Solo reunión';
+$string['room_type_recording_only'] = 'Solo grabaciones';
 
 // Room info.
 $string['view_conference_action_start'] = 'Iniciar sesión';
@@ -80,6 +95,7 @@ $string['recording_time'] = 'Hora';
 $string['recording_duration'] = 'Duración';
 $string['recording_toolbar'] = 'Herramientas';
 $string['recording_text_empty'] = 'No hay grabaciones por el momento...';
+$string['recording_loading'] = 'Recuperando las grabaciones...';
 $string['message_loading'] = 'Porfavor espere...';
 $string['pagination_previous'] = 'Anterior';
 $string['pagination_next'] = 'Siguiente';
@@ -92,4 +108,3 @@ $string['privacy:metadata:tutoom:email'] = 'El correo electrónico del usuario q
 $string['privacy:metadata:tutoom:fullname'] = 'El nombre completo del usuario que accede a Moodle.';
 $string['privacy:metadata:tutoom:coursename'] = 'El nombre del curso del usuario.';
 $string['privacy:metadata:tutoom:role'] = 'El rol del usuario que accede a Moodle.';
-

@@ -38,6 +38,13 @@ if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
     }
 }
 
+/** @var TUTOOM_LOG_EVENT_CREATE_MEETING string defines the tutoom create event */
+const TUTOOM_LOG_EVENT_CREATE_MEETING = 'CREATE_MEETING';
+/** @var TUTOOM_LOG_EVENT_JOIN_MEETING string defines the tutoom join event */
+const TUTOOM_LOG_EVENT_JOIN_MEETING = 'JOIN_MEETING';
+/** @var TUTOOM_LOG_EVENT_END_MEETING string defines the tutoom end event */
+const TUTOOM_LOG_EVENT_END_MEETING = 'END_MEETING';
+
 /**
  * Return if the plugin supports $feature.
  *
@@ -112,4 +119,32 @@ function tutoom_delete_instance($id) {
     $DB->delete_records('tutoom', array('id' => $id));
 
     return true;
+}
+
+/**
+ * Register a tutoom event
+ *
+ * @param object $tutoom
+ * @param string $event
+ * @param string $meta
+ *
+ * @return bool Success/Failure
+ */
+function tutoom_log($tutoom, $event, $meta = null) {
+    global $DB, $USER;
+
+    $log = new stdClass();
+
+    // Default values.
+    $log->courseid = $tutoom->course;
+    $log->tutoomid = $tutoom->id;
+    $log->userid = $USER->id;
+    $log->timecreated = time();
+    $log->meetingid = $tutoom->meetingid;
+    $log->log = $event;
+    $log->meta = $meta;
+
+    $log->id = $DB->insert_record('tutoom_logs', $log);
+
+    return $log->id;
 }

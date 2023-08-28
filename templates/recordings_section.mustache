@@ -21,19 +21,43 @@
 
     Example context (json):
     {
-        "recordings: [],
+        "isemptyrecordings": false,
+        "countrecordings": 0
     }
 }}
 
 <div id="tutoom_view_recordings" class="py-3">
     <div id='tutoom_view_recordings_header'>
-        <h4>{{#str}} recording_title, mod_tutoom {{/str}} ({{#recordings.length}}{{recordings.length}}{{/recordings.length}}{{^recordings.length}}0{{/recordings.length}})
-        </h4>
+        <h4>{{#str}} recording_title, mod_tutoom {{/str}} {{^isemptyrecordings}}({{countrecordings}}){{/isemptyrecordings}}</h4>
     </div>
     <div id='tutoom_view_recordings_content'>
-        <div id='tutoom-recording-empty' class='d-flex flex-column justify-content-center align-items-center'>
-            <img style='width: 200px;' src='pix/icon-empty-recordings.svg' />
-            <p class='mt-3'>{{#str}} recording_text_empty, mod_tutoom {{/str}}</p>
+        <div class="tutoom-recordings-table">
+            <div class="tutoom-recordings-thead">
+                <h3>PREVIEW</h3>
+                <h3>DURATION</h3>
+                <h3>DATE</h3>
+                <h3>TIME</h3>
+            </div>
+
+            {{#isemptyrecordings}}
+                <div class='d-flex flex-column justify-content-center align-items-center' style="padding: 64px 0px;">
+                    <img style='width: 200px;' src='pix/icon-empty-recordings.svg' />
+                    <p class='mt-3'>{{#str}} recording_text_empty, mod_tutoom {{/str}}</p>
+                </div>
+            {{/isemptyrecordings}}
+            {{^isemptyrecordings}}
+                <div id="tutoom_view_recordings_loading" class="w-100 justify-content-center align-items-center" style="display: flex; padding: 70px 0px;">
+                    <h3 class="m-0 p-0" style="font-size: 0.875rem; font-weight: normal; text-align: center; letter-spacing: 0.25px;">
+                        {{#str}} recording_loading, mod_tutoom {{/str}}
+                    </h3>
+                </div>
+
+                <div id="tutoom-recordings-table-content" class="tutoom-recordings-tbody">
+                    {{>mod_tutoom/recordings_table_content}}
+                </div>
+            {{/isemptyrecordings}}
         </div>
+
+        <div id="tutoom_view_recordings_pagination"></div>
     </div>
 </div>
