@@ -21,31 +21,69 @@
 
     Example context (json):
     {
+        "error": true,
+        "errorcode": 500,
         "baseurl": "",
         "id": 1
         "ismoderator": true,
         "meetingid: "12345",
         "name: "Tutoom's room name",
+        "showrecordings": true,
+        "showroominformation": true
+        "isemptyrecordings": false
     }
 }}
 
 <h3 class="mb-0">{{name}}</h3>
 
-<div id='tutoom-main-section'>
-    {{>mod_tutoom/main_section}}
-</div>
+{{#error}}
+    {{#errorcode}}
+        <p class="mb-0 mt-3">Error {{errorcode}}. {{#str}} view_page_error_general, mod_tutoom {{/str}}</p>
+    {{/errorcode}}
 
-{{!
-    Recordings coming soon
+    {{#meetingidnotexists}}
+        <p class="mb-0 mt-3">{{#str}} view_message_room_ended, mod_tutoom {{/str}}</p>
+    {{/meetingidnotexists}}
+{{/error}}
+{{^error}}
+    {{#showroominformation}}
+        <div id='tutoom-main-section'>
+            {{>mod_tutoom/main_section}}
+        </div>
+    {{/showroominformation}}
 
-    >mod_tutoom/recordings_section
-}}
+    {{#showrecordings}}
+        {{>mod_tutoom/recordings_section}}
+    {{/showrecordings}}
 
-{{#js}}
-    require(['mod_tutoom/activity'], function(module) {
-        const isModerator = Boolean(parseInt({{#quote}}{{ismoderator}}{{/quote}}));
-        module.init({{#quote}}{{id}}{{/quote}},isModerator,{{#quote}}{{baseurl}}{{/quote}});
-    });
-{{/js}}
+    {{#js}}
+        require(['mod_tutoom/activity'], function(module) {
+            const id = {{#quote}}{{id}}{{/quote}}
+            const baseUrl = {{#quote}}{{baseurl}}{{/quote}}
+            const isModerator = Boolean({{ismoderator}});
+            const showRecordings = Boolean({{showrecordings}})
+
+            const params = {
+                id,
+                baseUrl,
+                isModerator,
+                showRecordings
+            }
+
+            {{#showrecordings}}
+                if(showRecordings) {
+                    const countRecordings = {{countrecordings}}
+                    const limitRecordings = {{limitrecordings}}
+
+                    params["countRecordings"] = countRecordings
+                    params["limitRecordings"] = limitRecordings
+                }
+            {{/showrecordings}}
+
+
+            module.init(params);
+        });
+    {{/js}}
+{{/error}}
 
 

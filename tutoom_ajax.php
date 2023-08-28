@@ -43,7 +43,7 @@ $params['signed_parameters'] = optional_param('signed_parameters', '', PARAM_TEX
 $params['updatecache'] = optional_param('updatecache', 'false', PARAM_TEXT);
 $params['meta'] = optional_param('meta', '', PARAM_TEXT);
 $params['fullname'] = optional_param('fullname', '', PARAM_TEXT);
-$params['page'] = optional_param('page', 0, PARAM_INT);
+$params['page'] = optional_param('page', 1, PARAM_INT);
 
 if (empty($params['action'])) {
     header('HTTP/1.0 400 Bad Request. Parameter [' . $params['action'] . '] was not included');
@@ -63,7 +63,7 @@ try {
     require_login($course, true, $cm);
     require_sesskey();
 
-    $moduleinstance = $DB->get_record('tutoom', array('id' => $cm->instance), '*', MUST_EXIST);
+    $tutoomtable = $DB->get_record('tutoom', array('id' => $cm->instance), '*', MUST_EXIST);
 
     $modulecontext = context_module::instance($cm->id);
 
@@ -74,12 +74,13 @@ try {
 
     $fullname = "$USER->firstname $USER->lastname";
 
-    $meetingid = $moduleinstance->meetingid;
-    $classid = $moduleinstance->classid;
+    $tutoomid = $tutoomtable->id;
+    $meetingid = $tutoomtable->meetingid;
+    $courseid = $course->id;
 
     if ($action == 'get_meeting') {
         if (isset($meetingid)) {
-            $meeetinginfo = meeting::get_meeting_info($meetingid, $moduleinstance->id);
+            $meeetinginfo = meeting::get_meeting_info($meetingid, $tutoomid);
             echo json_encode($meeetinginfo);
         }
 
@@ -88,20 +89,19 @@ try {
 
     if ($action == 'start_meeting') {
         $coursename = $course->fullname;
-        $welcomemessage = $moduleinstance->welcomemessage;
+        $welcomemessage = $tutoomtable->welcomemessage;
         $logouturl = $params['logoutUrl'];
+        $recordingenabled = $tutoomtable->record === "1";
 
-        $response = meeting::create_meeting($classid, $logouturl, $coursename, $welcomemessage, $moduleinstance->id);
+        $response = meeting::create_meeting($courseid, $logouturl, $coursename, $welcomemessage, $tutoomid, $recordingenabled);
         echo json_encode($response);
 
         return;
     }
 
     if ($action == 'join_meeting') {
-        $appurl = $moduleinstance->urlapp;
-
         if (isset($meetingid) && $meetingid !== null) {
-            $joinurl = meeting::join_meeting($meetingid, $fullname, $role, $appurl);
+            $joinurl = meeting::join_meeting($meetingid, $fullname, $role, $tutoomid);
             echo json_encode(array("joinurl" => $joinurl));
         }
         else {
@@ -122,7 +122,7 @@ try {
         }
         else {
             if ($meetingid === $incomingmeetingid) {
-                $response = meeting::end_meeting($incomingmeetingid, $moduleinstance->id);
+                $response = meeting::end_meeting($incomingmeetingid, $tutoomid);
                 echo json_encode($response);
             }
             else {
@@ -134,11 +134,19 @@ try {
     }
 
     if ($action == 'get_recordings') {
-        $courseid = $course->id;
         $page = $params['page'] ?? 1;
 
-        $recordings = recording::get_recordings($classid, $page);
+        $recordings = recording::get_recordings($courseid, $page);
         echo json_encode($recordings);
+
+        return;
+    }
+
+    if ($action == 'join_playback') {
+        $meetingid = $params['meetingId'];
+
+        $joinurl = recording::join_playback($meetingid);
+        echo json_encode(array("joinurl" => $joinurl));
 
         return;
     }
