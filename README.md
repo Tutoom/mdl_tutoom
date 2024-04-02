@@ -10,7 +10,7 @@ Tutoom is a digital classroom with all tools you need: whiteboard tools, polls, 
 4. Add Tutoom activity inside course
 5. Join in the session
 
-For more information check our documentation [Setup & Plugins](https://help.tutoom.com/hc/en-us/sections/8524315989780-Moodle-Plugin)
+For more information check our documentation [Setup & Plugins](https://tutoom.com/help/articles/native-moodle-plugin)
 
 # Prerequisites
 
@@ -34,4 +34,4 @@ We have compatibility with this moodle versions:
 
 # Contact Us
 
-If you would like commercial support, contact us at [Tutoom Help Center](https://help.tutoom.com/hc/en-us).
+If you would like commercial support, contact us at [Tutoom Help Center](https://tutoom.com/help/).
